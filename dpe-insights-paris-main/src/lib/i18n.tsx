@@ -1,0 +1,932 @@
+import React, { createContext, useContext, useState, useCallback } from "react";
+
+export type Language = "fr" | "en";
+
+interface I18nContextType {
+  lang: Language;
+  toggleLang: () => void;
+  t: (key: string) => string;
+}
+
+const I18nContext = createContext<I18nContextType | null>(null);
+
+export const useI18n = () => {
+  const ctx = useContext(I18nContext);
+  if (!ctx) throw new Error("useI18n must be used within I18nProvider");
+  return ctx;
+};
+
+const translations: Record<Language, Record<string, string>> = {
+  fr: {
+    // Header
+    "nav.home": "Accueil",
+    "nav.diagnostic": "Diagnostic",
+    "nav.results": "Résultats",
+    "app.name": "Mon DPE Paris",
+
+    // Index page
+    "hero.badge": "Simulateur DPE gratuit — Paris",
+    "hero.title.1": "Découvrez combien vous pouvez",
+    "hero.title.highlight": "économiser",
+    "hero.title.2": "sur vos factures d'énergie",
+    "hero.desc": "Estimez votre classe DPE, identifiez ce qui vous coûte le plus cher et découvrez comment réduire vos factures — spécifiquement adapté aux logements parisiens.",
+    "hero.cta": "Estimer mes économies",
+    "hero.sub": "Gratuit · 5 minutes · Sans inscription · Vos données restent privées",
+    "dpe.title": "Qu'est-ce que le DPE ?",
+    "dpe.desc": "Le Diagnostic de Performance Énergétique classe les logements de A (très performant) à G (très énergivore). Il est obligatoire pour vendre ou louer un bien en France.",
+    "why.title": "Pourquoi ça peut vous faire économiser gros",
+    "why.bills.title": "Réduisez vos factures",
+    "why.bills.desc": "Un logement classe G coûte jusqu'à 6 fois plus en énergie qu'un classe A. À Paris, les charges de chauffage collectif peuvent représenter 40% de vos charges de copro.",
+    "why.regulation.title": "Évitez les interdictions de location",
+    "why.regulation.desc": "Depuis 2025, les logements classe G ne peuvent plus être loués à Paris. Les F suivront en 2028, les E en 2034. Agir maintenant protège votre investissement.",
+    "why.value.title": "Gagnez à la revente",
+    "why.value.desc": "À Paris, passer de D à B peut ajouter 15 à 20% à la valeur de votre bien — soit des dizaines de milliers d'euros en plus.",
+    "tool.title": "Ce que vous allez obtenir",
+    "tool.desc": "Un diagnostic personnalisé avec des chiffres concrets : combien vous dépensez, combien vous pouvez économiser, et par où commencer.",
+    "tool.estimate.title": "Votre coût énergie estimé",
+    "tool.estimate.desc": "Un chiffrage basé sur les caractéristiques réelles de votre logement.",
+    "tool.losses.title": "Où part votre argent",
+    "tool.losses.desc": "Identifiez ce qui vous coûte le plus : murs, fenêtres, chauffage, habitudes.",
+    "tool.reco.title": "Comment économiser",
+    "tool.reco.desc": "Des actions concrètes avec coûts, économies estimées et aides parisiennes.",
+    "tool.edu.title": "Conseils pratiques",
+    "tool.edu.desc": "Des gestes simples pour réduire vos factures dès aujourd'hui.",
+    "cta.title": "Prêt à savoir combien vous pouvez économiser ?",
+    "cta.desc": "En 7 étapes simples, découvrez combien vous dépensez en énergie et comment réduire vos factures avec des actions concrètes.",
+    "cta.button": "Estimer mes économies",
+    "footer.disclaimer": "Cet outil fournit une estimation indicative. Il ne remplace pas un DPE officiel réalisé par un diagnostiqueur certifié.",
+    "footer.copy": "Mon DPE Paris — Simulateur éducatif de performance énergétique",
+    "footer.privacy": "Vos données restent sur votre appareil — rien n'est envoyé ni stocké.",
+
+    // About section
+    "about.title": "Pourquoi cet outil ?",
+    "about.desc": "On a créé cet outil parce qu'on en avait marre de voir des factures d'énergie exploser sans que personne n'explique clairement pourquoi, ni comment les réduire. Pas de jargon, pas de devis commercial — juste des réponses claires sur combien vous dépensez et ce que vous pouvez faire pour payer moins.",
+
+    // 404 page
+    "notfound.title": "Page introuvable",
+    "notfound.desc": "La page que vous cherchez n'existe pas ou a été déplacée.",
+    "notfound.cta": "Retour à l'accueil",
+
+    // DPE scale
+    "dpe.unit": "kWh/m²/an",
+
+    // Questionnaire
+    "wizard.step": "Étape",
+    "wizard.prev": "Précédent",
+    "wizard.next": "Suivant",
+    "wizard.submit": "Voir mes résultats",
+    "step.general": "Général",
+    "step.envelope": "Enveloppe",
+    "step.heating": "Chauffage",
+    "step.energy": "Énergie",
+    "step.ventilation": "Ventilation",
+    "step.currentdpe": "Votre DPE",
+    "step.usage": "Habitudes",
+
+    // Loading
+    "loading.title": "Calcul en cours…",
+    "loading.desc": "On analyse votre logement pour estimer vos coûts d'énergie et vos économies possibles.",
+
+    // StepGeneralInfo
+    "general.housing_type": "Type de logement",
+    "general.housing_type.help": "Appartement ou maison ? Les maisons ont plus de murs exposés à l'extérieur, donc plus de pertes de chaleur. Vous le savez déjà !",
+    "general.apartment": "Appartement",
+    "general.house": "Maison",
+    "general.surface": "Surface habitable (m²)",
+    "general.surface.help": "La surface de votre logement en mètres carrés. Vous la trouverez sur votre bail, votre taxe foncière ou votre acte de propriété (souvent appelée « surface Carrez »).",
+    "general.paris_avg": "Moyenne Paris : 49 m²",
+    "general.arrondissement": "Votre arrondissement",
+    "general.arrondissement.help": "Dans quel arrondissement de Paris habitez-vous ? Cela nous aide à adapter les recommandations locales.",
+    "general.construction": "Période de construction",
+    "general.construction.help": "Quand votre immeuble a-t-il été construit ? Vous trouverez cette info sur votre bail, l'acte de propriété ou parfois sur la plaque de l'immeuble. Les normes d'isolation ont beaucoup changé au fil du temps.",
+    "general.period.before1948": "Avant 1948",
+    "general.period.1948-1974": "1948 – 1974",
+    "general.period.1975-1988": "1975 – 1988",
+    "general.period.1989-2000": "1989 – 2000",
+    "general.period.2001-2012": "2001 – 2012",
+    "general.period.after2012": "Après 2012",
+    "general.idk": "Pas sûr ? Vérifiez votre bail ou votre DPE",
+    "general.idk.desc": "On utilisera une estimation prudente",
+
+    // StepEnvelope
+    "envelope.wall": "Isolation des murs",
+    "envelope.wall.help": "L'isolation des murs, c'est ce qui empêche la chaleur de s'échapper à travers les murs. Vous trouverez cette info sur votre DPE ou en demandant à votre syndic. En cas de doute, l'âge du bâtiment donne un bon indice.",
+    "envelope.roof": "Isolation de la toiture",
+    "envelope.roof.help": "L'isolation de la toiture empêche la chaleur de s'échapper par le haut. Très important si vous êtes au dernier étage. Consultez votre DPE ou demandez à votre syndic.",
+    "envelope.floor": "Isolation du plancher",
+    "envelope.floor.help": "L'isolation du plancher empêche le froid de remonter du sol. Important surtout si vous êtes au rez-de-chaussée au-dessus d'une cave. Vérifiez votre DPE.",
+    "envelope.quality": "Niveau",
+    "envelope.insulation.none": "Aucune",
+    "envelope.insulation.none.desc": "Rien n'a été ajouté — typique des immeubles construits avant 1974",
+    "envelope.insulation.poor": "Basique",
+    "envelope.insulation.poor.desc": "Isolation d'origine, partielle ou vieillissante — immeubles des années 1975-1990",
+    "envelope.insulation.average": "Standard",
+    "envelope.insulation.average.desc": "Isolation aux normes de l'époque — immeubles des années 1990-2005",
+    "envelope.insulation.good": "Bonne",
+    "envelope.insulation.good.desc": "Rénovée ou construction récente — après 2005",
+    "envelope.insulation.excellent": "Très performante",
+    "envelope.insulation.excellent.desc": "Isolation haute performance — construction neuve ou rénovation complète récente",
+    "envelope.insulation.idk": "Pas sûr ? Consultez votre DPE ou demandez à votre syndic",
+    "envelope.window_type": "Type de vitrage",
+    "envelope.window_type.help": "Le vitrage de vos fenêtres : simple, double ou triple épaisseur de verre. Regardez le bord de vos fenêtres : si vous voyez deux couches de verre séparées par un espace, c'est du double vitrage. Une seule couche = simple vitrage.",
+    "envelope.window.single": "Simple vitrage",
+    "envelope.window.single.desc": "Une seule couche de verre — très courant dans les immeubles anciens",
+    "envelope.window.double": "Double vitrage",
+    "envelope.window.double.desc": "Deux couches de verre — standard dans les logements rénovés ou récents",
+    "envelope.window.triple": "Triple vitrage",
+    "envelope.window.triple.desc": "Trois couches de verre — très performant, surtout dans le neuf",
+    "envelope.window.idk": "Pas sûr ? Regardez le bord de vos fenêtres",
+    "envelope.window.idk.desc": "Comptez les couches de verre visibles sur la tranche",
+    "envelope.orientation": "Orientation principale",
+    "envelope.orientation.help": "De quel côté donne la majorité de vos fenêtres ? Si le soleil entre le matin, c'est l'est. L'après-midi, c'est l'ouest. Toute la journée, c'est le sud.",
+    "envelope.orientation.idk": "Pas sûr ? Regardez d'où vient le soleil",
+
+    "envelope.dir.north": "Nord",
+    "envelope.dir.south": "Sud",
+    "envelope.dir.east": "Est",
+    "envelope.dir.west": "Ouest",
+
+    // StepHeating
+    "heating.type": "Type de chauffage principal",
+    "heating.type.help": "Quel système chauffe votre logement ? Regardez vos radiateurs ou votre chaudière. Si vous avez un chauffage collectif, consultez vos charges de copropriété pour connaître le type.",
+    "heating.multi": "Vous pouvez en sélectionner plusieurs.",
+    "heating.electric_convector": "Convecteurs électriques (« grille-pain »)",
+    "heating.electric_radiant": "Radiateurs électriques (inertie / rayonnant)",
+    "heating.gas_boiler": "Chaudière gaz classique",
+    "heating.gas_condensing": "Chaudière gaz à condensation",
+    "heating.fuel_boiler": "Chaudière fioul",
+    "heating.heat_pump": "Pompe à chaleur",
+    "heating.wood": "Bois / granulés",
+    "heating.idk": "Pas sûr ? Vérifiez vos charges de copro ou votre contrat d'énergie",
+    "heating.idk.desc": "On utilisera une estimation prudente",
+    "heating.age": "Âge du système de chauffage",
+    "heating.age.help": "Depuis quand votre système de chauffage est-il en place ? Consultez la plaque signalétique de votre chaudière ou demandez à votre syndic pour le chauffage collectif.",
+    "heating.age.less5": "Moins de 5 ans",
+    "heating.age.5to15": "5 à 15 ans",
+    "heating.age.15to25": "15 à 25 ans",
+    "heating.age.more25": "Plus de 25 ans",
+    "heating.age.idk": "Pas sûr ? Vérifiez la plaque de votre chaudière ou demandez au syndic",
+    "heating.distribution": "Système de distribution",
+    "heating.distribution.help": "Comment la chaleur est-elle diffusée chez vous ? Des radiateurs classiques fixés aux murs, ou un plancher chauffant intégré au sol ? Vous le sentez sous vos pieds !",
+    "heating.radiators": "Radiateurs",
+    "heating.floor_heating": "Plancher chauffant",
+    "heating.distribution.idk": "Pas sûr ? Si le sol est chaud en hiver, c'est un plancher chauffant",
+
+    // StepEnergy
+    "energy.title": "Sources d'énergie",
+    "energy.help": "Quelles énergies alimentent votre logement ? Vérifiez vos factures d'énergie ou vos charges de copro. Vous pouvez en sélectionner plusieurs si vous utilisez par exemple l'électricité ET le gaz.",
+    "energy.electricity": "Électricité",
+    "energy.electricity.desc": "Pour le chauffage, l'eau chaude, les appareils — vérifiez votre facture EDF/Engie",
+    "energy.gas": "Gaz naturel",
+    "energy.gas.desc": "Courant pour le chauffage collectif à Paris — visible sur vos charges de copro",
+    "energy.fuel": "Fioul",
+    "energy.fuel.desc": "Chaudière fioul — vérifiez si votre immeuble a une cuve au sous-sol",
+    "energy.renewable": "Énergies renouvelables",
+    "energy.renewable.desc": "Bois, solaire, géothermie — si vous avez des panneaux ou un poêle",
+    "energy.unknown": "Pas sûr ? Consultez vos factures ou vos charges de copropriété",
+    "energy.unknown.desc": "On utilisera la configuration la plus courante à Paris",
+
+    // StepVentilation
+    "ventilation.type": "Type de ventilation",
+    "ventilation.type.help": "Comment l'air est-il renouvelé chez vous ? Regardez si vous avez des bouches d'aération dans la cuisine et la salle de bain (VMC), ou si vous aérez uniquement en ouvrant les fenêtres.",
+    "ventilation.natural": "Ventilation naturelle",
+    "ventilation.natural.desc": "Aération par les fenêtres uniquement — pas de bouche d'extraction visible",
+    "ventilation.vmc_simple": "VMC simple flux",
+    "ventilation.vmc_simple.desc": "Bouches d'extraction dans cuisine/salle de bain — le plus courant",
+    "ventilation.vmc_double": "VMC double flux",
+    "ventilation.vmc_double.desc": "Système avec récupération de chaleur — surtout dans le neuf",
+    "ventilation.idk": "Pas sûr ? Cherchez des bouches d'aération dans votre cuisine/salle de bain",
+    "ventilation.idk.desc": "Si vous en voyez, c'est probablement une VMC",
+    "ventilation.leakage": "Courants d'air",
+    "ventilation.leakage.help": "Sentez-vous des courants d'air froid en hiver ? Passez votre main autour des fenêtres, des portes et des prises électriques sur les murs extérieurs pour vérifier.",
+    "ventilation.none": "Aucun — logement bien étanche",
+    "ventilation.slight": "Quelques courants d'air légers",
+    "ventilation.moderate": "Courants d'air notables autour des fenêtres/portes",
+    "ventilation.significant": "Courants d'air importants — on les sent nettement",
+    "ventilation.leakage.idk": "Pas sûr ? Passez votre main autour des fenêtres fermées en hiver",
+
+    // StepCurrentDPE
+    "currentdpe.title": "Votre DPE actuel",
+    "currentdpe.help": "Si vous avez un DPE officiel, sélectionnez la lettre correspondante. Vous le trouverez sur votre bail, votre annonce immobilière, ou le document remis lors de l'achat/location.",
+    "currentdpe.class": "Classe",
+    "currentdpe.idk": "Je n'ai pas de DPE",
+    "currentdpe.bill.title": "Votre facture d'énergie annuelle",
+    "currentdpe.bill.help": "Combien payez-vous par an en électricité et/ou gaz ? Consultez votre dernière facture annuelle ou votre espace client EDF/Engie. Le montant total TTC est sur la première page.",
+    "currentdpe.bill.avg": "Moyenne Paris : ~1 200 €/an",
+    "currentdpe.bill.idk": "Je ne connais pas ma facture",
+    "currentdpe.bill.idk.tap": "Appuyez pour renseigner votre facture",
+
+    // StepOccupancy — expanded
+    "occupancy.thermostat": "Température de chauffage en hiver",
+    "occupancy.thermostat.help": "À quelle température chauffez-vous ? Regardez votre thermostat ou votre radiateur. Chaque degré au-dessus de 19°C augmente votre facture d'environ 7%.",
+    "occupancy.temperature": "Température",
+    "occupancy.thermo.eco": "Économe — bravo, ça se voit sur la facture !",
+    "occupancy.thermo.comfort": "Confortable — un bon équilibre",
+    "occupancy.thermo.warm": "Plutôt chaud — +7% par degré supplémentaire",
+    "occupancy.thermo.hot": "Très chaud — impact significatif sur votre facture",
+    "occupancy.recommended": "Recommandé : 19–20°C",
+    "occupancy.count": "Nombre d'occupants",
+    "occupancy.count.help": "Combien de personnes vivent dans le logement ? Ça influence la consommation d'eau chaude et d'électricité.",
+    "occupancy.people": "Occupants",
+    "occupancy.person": "personne",
+    "occupancy.persons": "personnes",
+    "occupancy.paris_avg": "Moyenne Paris : 1.9 pers.",
+    "occupancy.hot_water": "Consommation d'eau chaude",
+    "occupancy.hot_water.help": "À quelle fréquence utilisez-vous de l'eau chaude pour les douches/bains ? Un bain coûte 3 à 5 fois plus cher qu'une douche.",
+    "occupancy.hw_low": "Faible — douches courtes, pas tous les jours",
+    "occupancy.hw_average": "Moyen — douche quotidienne",
+    "occupancy.hw_high": "Élevé — bains fréquents ou longues douches",
+
+    // Expanded habits
+    "habits.title": "Vos habitudes au quotidien",
+    "habits.subtitle": "Ces infos nous aident à personnaliser vos recommandations d'économies.",
+
+    "habits.heating_freq": "Fréquence de chauffage en hiver",
+    "habits.heating_freq.help": "À quelle fréquence le chauffage tourne-t-il chez vous en hiver ?",
+    "habits.heating_freq.rarely": "Rarement — je chauffe le moins possible",
+    "habits.heating_freq.sometimes": "Parfois — seulement quand il fait vraiment froid",
+    "habits.heating_freq.often": "Souvent — la plupart du temps en hiver",
+    "habits.heating_freq.always": "Tout le temps — le chauffage tourne en continu",
+
+    "habits.airing": "Aération du logement",
+    "habits.airing.help": "À quelle fréquence ouvrez-vous les fenêtres pour aérer ? Aérer 10 min par jour suffit sans gaspiller trop de chaleur.",
+    "habits.airing.never": "Jamais ou presque",
+    "habits.airing.sometimes": "De temps en temps",
+    "habits.airing.daily": "Tous les jours, ~10 min",
+    "habits.airing.multiple": "Plusieurs fois par jour ou fenêtres souvent ouvertes",
+
+    "habits.laundry": "Fréquence de lessive",
+    "habits.laundry.help": "Combien de machines faites-vous par semaine ? Chaque cycle coûte environ 0,50 € en énergie.",
+    "habits.laundry.1_2": "1 à 2 machines par semaine",
+    "habits.laundry.3_4": "3 à 4 machines par semaine",
+    "habits.laundry.5_plus": "5 machines ou plus par semaine",
+
+    "habits.dishwasher": "Utilisez-vous un lave-vaisselle ?",
+    "habits.dishwasher.help": "Un lave-vaisselle récent consomme moins d'eau et d'énergie que la vaisselle à la main.",
+    "habits.yes": "Oui",
+    "habits.no": "Non",
+
+    "habits.dryer": "Utilisez-vous un sèche-linge ?",
+    "habits.dryer.help": "Le sèche-linge est l'un des appareils les plus énergivores. Un cycle coûte environ 0,60 €.",
+
+    "habits.lights": "Laissez-vous souvent les lumières allumées ?",
+    "habits.lights.help": "Dans les pièces inoccupées — l'éclairage représente environ 10% de la facture d'électricité.",
+
+    "habits.programmable": "Avez-vous un thermostat programmable ?",
+    "habits.programmable.help": "Un thermostat programmable permet de baisser automatiquement la température la nuit et quand vous êtes absent.",
+
+    // Floating help
+    "help.title": "À propos de cette étape",
+    "help.step.general": "On a besoin de quelques infos de base sur votre logement pour estimer vos coûts d'énergie. Tout est sur votre bail ou votre DPE.",
+    "help.step.envelope": "L'enveloppe de votre bâtiment (murs, toit, sol, fenêtres) détermine combien de chaleur — et d'argent — s'échappe. C'est souvent le premier poste d'économies.",
+    "help.step.heating": "Le chauffage, c'est 60 à 70% de votre facture d'énergie. Le type de système et son âge changent tout.",
+    "help.step.energy": "Le type d'énergie que vous utilisez influence directement le coût au kWh et votre score DPE.",
+    "help.step.ventilation": "Une mauvaise ventilation peut ajouter 25% à votre facture de chauffage. Quelques vérifications simples suffisent.",
+    "help.step.currentdpe": "Si vous avez déjà un DPE, on comparera notre estimation avec votre diagnostic officiel.",
+    "help.step.usage": "Vos habitudes quotidiennes influencent beaucoup votre facture. On vous posera quelques questions pour personnaliser vos recommandations.",
+
+    // Results page
+    "results.none.title": "Aucun résultat disponible",
+    "results.none.desc": "Remplissez le questionnaire pour découvrir combien vous pouvez économiser !",
+    "results.none.cta": "Commencer le diagnostic",
+    "results.title": "Votre diagnostic énergie",
+    "results.subtitle": "Voici ce que votre logement vous coûte — et ce que vous pouvez économiser",
+    "results.class": "Classe estimée",
+    "results.consumption": "Consommation estimée",
+    "results.disclaimer": "Estimation indicative. Ce résultat ne remplace pas un DPE officiel réalisé par un diagnostiqueur certifié.",
+
+    // Results — Current Performance
+    "results.performance.title": "Performance actuelle",
+    "results.performance.annual_cost": "Coût annuel estimé",
+    "results.performance.annual_cost.note": "Basé sur un prix moyen de 0,21 €/kWh",
+    "results.performance.monthly": "soit environ",
+    "results.performance.monthly.unit": "€/mois",
+    "results.performance.emissions": "Émissions CO₂ estimées",
+    "results.performance.emissions.unit": "kg CO₂/an",
+    "results.performance.emissions.note": "Équivalent à",
+    "results.performance.emissions.car_km": "km en voiture",
+
+    // Results — Estimated Costs
+    "results.costs.title": "Répartition de vos dépenses",
+
+    "results.breakdown": "Répartition de la consommation",
+    "results.breakdown.heating": "Chauffage",
+    "results.breakdown.hotwater": "Eau chaude",
+    "results.breakdown.envelope": "Pertes par les murs/fenêtres",
+    "results.weaknesses": "Ce qui vous coûte le plus",
+    "results.weaknesses.empty": "Bravo ! Votre logement est déjà bien optimisé. Pas de gros poste de dépense inutile identifié.",
+    "results.cat.envelope": "Enveloppe",
+    "results.cat.heating": "Chauffage",
+    "results.cat.ventilation": "Ventilation",
+    "results.impact.high": "Impact élevé",
+    "results.impact.medium": "Impact moyen",
+    "results.impact.low": "Impact faible",
+
+    // Quick Wins
+    "results.quickwins.title": "Économies immédiates — sans travaux",
+    "results.quickwins.subtitle": "Des gestes simples pour réduire votre facture dès ce mois-ci.",
+    "results.quickwins.already_good": "Vous faites déjà très bien ! On n'a pas trouvé de geste simple supplémentaire à vous recommander.",
+
+    // Renovation Recommendations
+    "results.reno.title": "Travaux recommandés",
+    "results.reno.subtitle": "Des actions concrètes avec coûts, économies et retour sur investissement.",
+    "results.reno.empty": "Votre logement est déjà en bon état ! Pas de travaux prioritaires identifiés.",
+
+    "results.recommendations": "Plan d'action recommandé",
+    "results.recommendations.subtitle": "Des recommandations concrètes avec coûts, économies estimées et aides disponibles à Paris.",
+    "results.priority.high": "Priorité haute",
+    "results.priority.medium": "Priorité moyenne",
+    "results.priority.low": "Priorité basse",
+    "results.saving": "d'économies",
+    "results.dpe_impact": "Impact DPE",
+    "results.comfort": "Confort",
+    "results.bill": "Retour sur investissement",
+    "results.cost": "Coût estimé",
+    "results.aid": "Aides disponibles",
+    "results.providers": "Où se renseigner",
+    "results.edu.title": "À savoir",
+    "results.edu.1.title": "Votre classe DPE n'est pas une fatalité",
+    "results.edu.1.desc": "Chaque point faible identifié peut être corrigé. Les économies sont souvent plus rapides qu'on ne le pense.",
+    "results.edu.2.title": "Isoler d'abord, chauffer ensuite",
+    "results.edu.2.desc": "Changer de chauffage sans isoler, c'est chauffer l'extérieur. Une bonne isolation réduit vos besoins et le coût de tout le reste.",
+    "results.edu.3.title": "Les petits gestes comptent aussi",
+    "results.edu.3.desc": "Baisser le thermostat de 1°C, c'est 7% de moins sur la facture. Multiplié par 12 mois, ça fait une vraie différence.",
+    "results.redo": "Refaire le diagnostic",
+    "results.export": "Télécharger en PDF",
+
+    // Comparison
+    "results.comparison.title": "Comparaison avec votre DPE officiel",
+    "results.comparison.assigned": "Votre DPE officiel",
+    "results.comparison.estimated": "Notre estimation",
+    "results.comparison.worse": "Notre estimation indique une consommation plus élevée que votre DPE officiel. Cela peut s'expliquer par des habitudes de consommation ou des facteurs non captés par notre questionnaire.",
+    "results.comparison.better": "Notre estimation est plus favorable que votre DPE officiel. Vos efforts d'économie d'énergie portent leurs fruits !",
+    "results.comparison.same": "Notre estimation est cohérente avec votre DPE officiel.",
+
+    // ROI
+    "results.roi.title": "Retour sur investissement",
+    "results.roi.subtitle": "Combien de temps pour rentabiliser chaque rénovation grâce aux économies sur vos factures.",
+    "results.roi.currentbill": "Votre facture annuelle estimée",
+    "results.roi.year": "an",
+    "results.roi.years_payback": "ans",
+    "results.roi.yr": "a",
+    "results.roi.cost": "Coût estimé",
+    "results.roi.saving": "Économie/an",
+    "results.roi.payback": "Rentabilisé en",
+    "results.roi.userprovided": "votre facture réelle",
+    "results.roi.disclaimer": "Estimations basées sur un prix moyen de 0,21 €/kWh. Les montants réels dépendent de votre contrat.",
+
+    // Companies
+    "results.companies": "Entreprises recommandées",
+    "results.companies.disclaimer": "Entreprises à titre illustratif — les vrais prestataires seront ajoutés prochainement.",
+
+    // Small wins
+    "smallwins.title": "Économies rapides 💡",
+    "smallwins.subtitle": "Des gestes simples, des économies dès ce mois-ci",
+    "smallwins.month": "mois",
+    "smallwins.shower": "Raccourcissez vos douches de 5 min",
+    "smallwins.thermostat": "Baissez le thermostat de 1°C",
+    "smallwins.standby": "Éteignez les appareils en veille",
+    "smallwins.offpeak": "Lancez le lave-linge en heures creuses",
+    "smallwins.dryer": "Séchez le linge à l'air libre quand c'est possible",
+    "smallwins.lights": "Éteignez les lumières en sortant des pièces",
+    "smallwins.programmable": "Installez un thermostat programmable (~50 €)",
+
+    // Validation
+    "validation.housing_type": "Veuillez sélectionner le type de logement",
+    "validation.surface": "Veuillez indiquer la surface de votre logement",
+    "validation.arrondissement": "Veuillez sélectionner votre arrondissement",
+    "validation.construction": "Veuillez indiquer la période de construction",
+    "validation.window_type": "Veuillez sélectionner le type de vitrage",
+    "validation.orientation": "Veuillez indiquer l'orientation principale",
+    "validation.heating_type": "Veuillez sélectionner au moins un type de chauffage",
+    "validation.energy_source": "Veuillez sélectionner au moins une source d'énergie",
+    "validation.ventilation": "Veuillez sélectionner le type de ventilation",
+    "validation.occupants": "Veuillez indiquer le nombre d'occupants",
+    "validation.hot_water": "Veuillez indiquer votre consommation d'eau chaude",
+
+    // Results enhanced
+    "results.summary.title": "Résumé de votre diagnostic",
+    "results.summary.class_desc.A": "Excellent ! Votre logement est très performant.",
+    "results.summary.class_desc.B": "Très bien. Votre logement est économe en énergie.",
+    "results.summary.class_desc.C": "Correct. Quelques améliorations pourraient réduire vos coûts.",
+    "results.summary.class_desc.D": "Moyen. Il existe un vrai potentiel d'économies.",
+    "results.summary.class_desc.E": "Énergivore. Des travaux peuvent réduire fortement vos factures.",
+    "results.summary.class_desc.F": "Très énergivore. Des rénovations sont fortement recommandées.",
+    "results.summary.class_desc.G": "Passoire énergétique. Agir maintenant peut vous faire économiser des milliers d'euros par an.",
+    "results.potential.title": "Votre potentiel d'économies",
+    "results.potential.if_renovated": "Si vous réalisez les travaux recommandés :",
+    "results.potential.annual_saving": "Économie estimée",
+    "results.potential.new_class": "Classe cible",
+    "results.potential.value_gain": "Plus-value immobilière estimée",
+    "results.potential.monthly_saving": "Économie mensuelle",
+    "results.potential.property_value": "de la valeur du bien",
+    "results.next_steps.title": "Prochaines étapes",
+    "results.next_steps.1": "1. Consultez l'Agence Parisienne du Climat (gratuit)",
+    "results.next_steps.2": "2. Demandez un devis à un artisan RGE",
+    "results.next_steps.3": "3. Vérifiez vos aides sur france-renov.gouv.fr",
+    "results.next_steps.4": "4. Faites réaliser un DPE officiel (~150 €)",
+
+    // Results sidebar nav
+    "results.nav.overview": "Vue d'ensemble",
+    "results.nav.energy": "Contrat énergie",
+    "results.nav.habits": "Changements d'habitudes",
+    "results.nav.renovations": "Travaux de rénovation",
+    "results.nav.nextsteps": "Prochaines étapes",
+
+    // Energy subscription section
+    "results.energy_sub.title": "Optimiser votre contrat d'énergie",
+    "results.energy_sub.subtitle": "Sans travaux, un simple changement d'abonnement peut réduire votre facture.",
+    "results.energy_sub.current": "Votre dépense actuelle estimée",
+    "results.energy_sub.optimized": "Avec un contrat optimisé",
+    "results.energy_sub.saving": "Économie potentielle",
+    "results.energy_sub.tip1": "Comparez les offres sur energie-info.fr (service public gratuit)",
+    "results.energy_sub.tip2": "Optez pour un tarif heures creuses si vous pouvez décaler vos consommations",
+    "results.energy_sub.tip3": "Vérifiez que votre puissance souscrite n'est pas surdimensionnée",
+    "results.energy_sub.per_year": "/an",
+    "results.energy_sub.per_month": "/mois",
+
+    // Habits section
+    "results.habits.title": "Changements d'habitudes",
+    "results.habits.subtitle": "Des gestes simples pour réduire votre facture sans aucun investissement.",
+    "results.habits.total_saving": "Économie totale estimée",
+
+    // Renovations section enhanced
+    "results.reno.co2_saved": "CO₂ évité",
+    "results.reno.co2_unit": "kg/an",
+    "results.reno.roi_pct": "Rendement",
+    "results.reno.total_investment": "Investissement total estimé",
+    "results.reno.total_annual_saving": "Économie annuelle totale",
+    "results.reno.total_co2": "CO₂ évité par an",
+    "results.reno.global_payback": "Rentabilisé en",
+
+    // Questionnaire energy preview
+    "questionnaire.energy_preview": "Dépense énergie estimée",
+    "questionnaire.energy_preview.year": "par an",
+    "questionnaire.energy_preview.month": "par mois",
+  },
+  en: {
+    // Header
+    "nav.home": "Home",
+    "nav.diagnostic": "Diagnostic",
+    "nav.results": "Results",
+    "app.name": "My DPE Paris",
+
+    // Index page
+    "hero.badge": "Free DPE Simulator — Paris",
+    "hero.title.1": "Find out how much you can",
+    "hero.title.highlight": "save",
+    "hero.title.2": "on your energy bills",
+    "hero.desc": "Estimate your DPE class, find out what costs you the most, and discover how to cut your bills — tailored to Parisian housing.",
+    "hero.cta": "Estimate my savings",
+    "hero.sub": "Free · 5 minutes · No sign-up · Your data stays private",
+    "dpe.title": "What is DPE?",
+    "dpe.desc": "The DPE (Diagnostic de Performance Énergétique) rates homes from A (very efficient) to G (very energy-intensive). It is mandatory for selling or renting property in France.",
+    "why.title": "Why this could save you serious money",
+    "why.bills.title": "Cut your energy bills",
+    "why.bills.desc": "A class G home costs up to 6x more in energy than class A. In Paris, collective heating can be 40% of your co-ownership charges.",
+    "why.regulation.title": "Avoid rental bans",
+    "why.regulation.desc": "Since 2025, class G homes can't be rented in Paris. F follows in 2028, E in 2034. Acting now protects your investment.",
+    "why.value.title": "Boost your resale value",
+    "why.value.desc": "In Paris, going from D to B can add 15–20% to your property value — that's tens of thousands of euros.",
+    "tool.title": "What you'll get",
+    "tool.desc": "A personalised diagnostic with real numbers: what you spend, what you can save, and where to start.",
+    "tool.estimate.title": "Your estimated energy cost",
+    "tool.estimate.desc": "A figure based on your home's actual characteristics.",
+    "tool.losses.title": "Where your money goes",
+    "tool.losses.desc": "Find out what costs you the most: walls, windows, heating, or habits.",
+    "tool.reco.title": "How to save",
+    "tool.reco.desc": "Concrete actions with costs, estimated savings, and Paris-specific aid.",
+    "tool.edu.title": "Practical tips",
+    "tool.edu.desc": "Simple actions to lower your bills starting today.",
+    "cta.title": "Ready to find out how much you can save?",
+    "cta.desc": "In 7 simple steps, discover what you spend on energy and how to cut your bills with concrete actions.",
+    "cta.button": "Estimate my savings",
+    "footer.disclaimer": "This tool provides an indicative estimate. It does not replace an official DPE performed by a certified assessor.",
+    "footer.copy": "My DPE Paris — Educational energy performance simulator",
+    "footer.privacy": "Your data stays on your device — nothing is sent or stored.",
+
+    // About section
+    "about.title": "Why this tool?",
+    "about.desc": "We built this because we were tired of seeing energy bills go through the roof with nobody explaining why — or how to fix it. No jargon, no sales pitch. Just clear answers about what you spend and what you can do to pay less.",
+
+    // 404 page
+    "notfound.title": "Page not found",
+    "notfound.desc": "The page you're looking for doesn't exist or has been moved.",
+    "notfound.cta": "Back to home",
+
+    // DPE scale
+    "dpe.unit": "kWh/m²/yr",
+
+    // Questionnaire
+    "wizard.step": "Step",
+    "wizard.prev": "Previous",
+    "wizard.next": "Next",
+    "wizard.submit": "See my results",
+    "step.general": "General",
+    "step.envelope": "Envelope",
+    "step.heating": "Heating",
+    "step.energy": "Energy",
+    "step.ventilation": "Ventilation",
+    "step.currentdpe": "Your DPE",
+    "step.usage": "Habits",
+
+    // Loading
+    "loading.title": "Calculating your results…",
+    "loading.desc": "We're analysing your home to estimate your energy costs and potential savings.",
+
+    // StepGeneralInfo
+    "general.housing_type": "Housing type",
+    "general.housing_type.help": "Flat or house? Houses have more walls exposed to the outside, so more heat loss. You already know this one!",
+    "general.apartment": "Flat",
+    "general.house": "House",
+    "general.surface": "Living area (m²)",
+    "general.surface.help": "Your home's area in square metres. You'll find it on your lease, property tax notice, or deed of sale (often called 'surface Carrez').",
+    "general.paris_avg": "Paris average: 49 m²",
+    "general.arrondissement": "Your arrondissement",
+    "general.arrondissement.help": "Which Paris arrondissement do you live in? This helps us tailor local recommendations.",
+    "general.construction": "Construction period",
+    "general.construction.help": "When was your building constructed? Check your lease, deed of sale, or sometimes the building plaque. Insulation standards have changed a lot over time.",
+    "general.period.before1948": "Before 1948",
+    "general.period.1948-1974": "1948 – 1974",
+    "general.period.1975-1988": "1975 – 1988",
+    "general.period.1989-2000": "1989 – 2000",
+    "general.period.2001-2012": "2001 – 2012",
+    "general.period.after2012": "After 2012",
+    "general.idk": "Not sure? Check your lease or DPE certificate",
+    "general.idk.desc": "We'll use a conservative estimate",
+
+    // StepEnvelope
+    "envelope.wall": "Wall insulation",
+    "envelope.wall.help": "Wall insulation keeps heat from escaping through your walls. Check your DPE certificate or ask your building manager. If unsure, the building's age is a good clue.",
+    "envelope.roof": "Roof insulation",
+    "envelope.roof.help": "Roof insulation stops heat escaping upward. Very important if you're on the top floor. Check your DPE or ask your building manager.",
+    "envelope.floor": "Floor insulation",
+    "envelope.floor.help": "Floor insulation stops cold rising from below. Important if you're on the ground floor above a cellar. Check your DPE.",
+    "envelope.quality": "Level",
+    "envelope.insulation.none": "None",
+    "envelope.insulation.none.desc": "Nothing added — typical of buildings before 1974",
+    "envelope.insulation.poor": "Basic",
+    "envelope.insulation.poor.desc": "Original, partial or ageing insulation — 1975–1990 buildings",
+    "envelope.insulation.average": "Standard",
+    "envelope.insulation.average.desc": "Up to code for its era — 1990–2005 buildings",
+    "envelope.insulation.good": "Good",
+    "envelope.insulation.good.desc": "Renovated or recent build — after 2005",
+    "envelope.insulation.excellent": "High performance",
+    "envelope.insulation.excellent.desc": "Top-tier insulation — new build or recent full renovation",
+    "envelope.insulation.idk": "Not sure? Check your DPE or ask your building manager",
+    "envelope.window_type": "Glazing type",
+    "envelope.window_type.help": "Your window glazing: single, double, or triple layers of glass. Look at the edge of your window — if you see two panes separated by a gap, it's double glazing. One pane = single.",
+    "envelope.window.single": "Single glazing",
+    "envelope.window.single.desc": "One layer of glass — very common in older buildings",
+    "envelope.window.double": "Double glazing",
+    "envelope.window.double.desc": "Two layers of glass — standard in renovated or recent homes",
+    "envelope.window.triple": "Triple glazing",
+    "envelope.window.triple.desc": "Three layers of glass — high performance, mostly in new builds",
+    "envelope.window.idk": "Not sure? Look at the edge of your windows",
+    "envelope.window.idk.desc": "Count the visible glass layers on the side",
+    "envelope.orientation": "Main orientation",
+    "envelope.orientation.help": "Which way do most of your windows face? If the sun comes in the morning, that's east. Afternoon is west. All day is south.",
+    "envelope.orientation.idk": "Not sure? Check where the sun comes from",
+    "envelope.dir.north": "North",
+    "envelope.dir.south": "South",
+    "envelope.dir.east": "East",
+    "envelope.dir.west": "West",
+
+    // StepHeating
+    "heating.type": "Main heating type",
+    "heating.type.help": "What heats your home? Look at your radiators or boiler. If you have collective heating, check your co-ownership charges to find out the type.",
+    "heating.multi": "You can select more than one.",
+    "heating.electric_convector": "Electric convectors ('toasters')",
+    "heating.electric_radiant": "Electric radiators (inertia / radiant)",
+    "heating.gas_boiler": "Standard gas boiler",
+    "heating.gas_condensing": "Condensing gas boiler",
+    "heating.fuel_boiler": "Oil boiler",
+    "heating.heat_pump": "Heat pump",
+    "heating.wood": "Wood / pellets",
+    "heating.idk": "Not sure? Check your co-ownership charges or energy contract",
+    "heating.idk.desc": "We'll use a conservative estimate",
+    "heating.age": "Heating system age",
+    "heating.age.help": "How long has your heating system been in place? Check the nameplate on your boiler or ask your building manager for collective heating.",
+    "heating.age.less5": "Less than 5 years",
+    "heating.age.5to15": "5 to 15 years",
+    "heating.age.15to25": "15 to 25 years",
+    "heating.age.more25": "Over 25 years",
+    "heating.age.idk": "Not sure? Check your boiler nameplate or ask the building manager",
+    "heating.distribution": "Distribution system",
+    "heating.distribution.help": "How is heat distributed in your home? Standard radiators on the walls, or underfloor heating built into the floor? You can feel it under your feet!",
+    "heating.radiators": "Radiators",
+    "heating.floor_heating": "Underfloor heating",
+    "heating.distribution.idk": "Not sure? If the floor is warm in winter, it's underfloor heating",
+
+    // StepEnergy
+    "energy.title": "Energy sources",
+    "energy.help": "What energy sources power your home? Check your energy bills or co-ownership charges. You can select multiple — e.g. electricity AND gas.",
+    "energy.electricity": "Electricity",
+    "energy.electricity.desc": "For heating, hot water, appliances — check your EDF/Engie bill",
+    "energy.gas": "Natural gas",
+    "energy.gas.desc": "Common for collective heating in Paris — visible on co-ownership charges",
+    "energy.fuel": "Fuel oil",
+    "energy.fuel.desc": "Oil boiler — check if your building has a tank in the basement",
+    "energy.renewable": "Renewable energies",
+    "energy.renewable.desc": "Wood, solar, geothermal — if you have panels or a stove",
+    "energy.unknown": "Not sure? Check your bills or co-ownership charges",
+    "energy.unknown.desc": "We'll use the most common configuration for Paris",
+
+    // StepVentilation
+    "ventilation.type": "Ventilation type",
+    "ventilation.type.help": "How is air renewed in your home? Look for extraction vents in the kitchen and bathroom (mechanical ventilation), or do you only ventilate by opening windows?",
+    "ventilation.natural": "Natural ventilation",
+    "ventilation.natural.desc": "Opening windows only — no visible extraction vents",
+    "ventilation.vmc_simple": "Single-flow mechanical ventilation",
+    "ventilation.vmc_simple.desc": "Extraction vents in kitchen/bathroom — most common",
+    "ventilation.vmc_double": "Dual-flow mechanical ventilation",
+    "ventilation.vmc_double.desc": "System with heat recovery — mostly in new builds",
+    "ventilation.idk": "Not sure? Look for vents in your kitchen/bathroom",
+    "ventilation.idk.desc": "If you see them, it's probably mechanical ventilation",
+    "ventilation.leakage": "Draughts",
+    "ventilation.leakage.help": "Do you feel cold draughts in winter? Run your hand around windows, doors, and power sockets on external walls to check.",
+    "ventilation.none": "None — well-sealed home",
+    "ventilation.slight": "Some light draughts",
+    "ventilation.moderate": "Noticeable draughts around windows/doors",
+    "ventilation.significant": "Major draughts — clearly noticeable",
+    "ventilation.leakage.idk": "Not sure? Run your hand around closed windows in winter",
+
+    // StepCurrentDPE
+    "currentdpe.title": "Your current DPE",
+    "currentdpe.help": "If you have an official DPE, select the letter. You'll find it on your lease, property listing, or the document given at purchase/rental.",
+    "currentdpe.class": "Class",
+    "currentdpe.idk": "I don't have a DPE",
+    "currentdpe.bill.title": "Your annual energy bill",
+    "currentdpe.bill.help": "How much do you pay per year for electricity and/or gas? Check your latest annual bill or your online account with EDF/Engie. The total including tax is on the first page.",
+    "currentdpe.bill.avg": "Paris average: ~€1,200/yr",
+    "currentdpe.bill.idk": "I don't know my bill",
+    "currentdpe.bill.idk.tap": "Tap to enter your bill",
+
+    // StepOccupancy — expanded
+    "occupancy.thermostat": "Heating temperature in winter",
+    "occupancy.thermostat.help": "What temperature do you heat to? Check your thermostat or radiator. Every degree above 19°C adds about 7% to your bill.",
+    "occupancy.temperature": "Temperature",
+    "occupancy.thermo.eco": "Economical — great, it shows on your bill!",
+    "occupancy.thermo.comfort": "Comfortable — a good balance",
+    "occupancy.thermo.warm": "Rather warm — +7% per extra degree",
+    "occupancy.thermo.hot": "Very warm — significant impact on your bill",
+    "occupancy.recommended": "Recommended: 19–20°C",
+    "occupancy.count": "Number of occupants",
+    "occupancy.count.help": "How many people live in the home? This affects hot water and electricity use.",
+    "occupancy.people": "Occupants",
+    "occupancy.person": "person",
+    "occupancy.persons": "people",
+    "occupancy.paris_avg": "Paris average: 1.9 pers.",
+    "occupancy.hot_water": "Hot water usage",
+    "occupancy.hot_water.help": "How often do you use hot water for showers/baths? A bath costs 3–5x more than a shower.",
+    "occupancy.hw_low": "Low — short showers, not every day",
+    "occupancy.hw_average": "Average — daily shower",
+    "occupancy.hw_high": "High — frequent baths or long showers",
+
+    // Expanded habits
+    "habits.title": "Your daily habits",
+    "habits.subtitle": "This helps us personalise your savings recommendations.",
+
+    "habits.heating_freq": "How often do you heat in winter?",
+    "habits.heating_freq.help": "How frequently does your heating run in winter?",
+    "habits.heating_freq.rarely": "Rarely — I heat as little as possible",
+    "habits.heating_freq.sometimes": "Sometimes — only when it's really cold",
+    "habits.heating_freq.often": "Often — most of the time in winter",
+    "habits.heating_freq.always": "All the time — heating runs continuously",
+
+    "habits.airing": "Airing your home",
+    "habits.airing.help": "How often do you open windows to air out? 10 min per day is enough without wasting too much heat.",
+    "habits.airing.never": "Never or almost never",
+    "habits.airing.sometimes": "Sometimes",
+    "habits.airing.daily": "Every day, ~10 min",
+    "habits.airing.multiple": "Several times a day or windows often open",
+
+    "habits.laundry": "Laundry frequency",
+    "habits.laundry.help": "How many loads per week? Each cycle costs about €0.50 in energy.",
+    "habits.laundry.1_2": "1–2 loads per week",
+    "habits.laundry.3_4": "3–4 loads per week",
+    "habits.laundry.5_plus": "5+ loads per week",
+
+    "habits.dishwasher": "Do you use a dishwasher?",
+    "habits.dishwasher.help": "A modern dishwasher uses less water and energy than washing by hand.",
+    "habits.yes": "Yes",
+    "habits.no": "No",
+
+    "habits.dryer": "Do you use a tumble dryer?",
+    "habits.dryer.help": "Tumble dryers are one of the most energy-hungry appliances. One cycle costs about €0.60.",
+
+    "habits.lights": "Do you often leave lights on?",
+    "habits.lights.help": "In unoccupied rooms — lighting is about 10% of your electricity bill.",
+
+    "habits.programmable": "Do you have a programmable thermostat?",
+    "habits.programmable.help": "A programmable thermostat automatically lowers the temperature at night and when you're away.",
+
+    // Floating help
+    "help.title": "About this step",
+    "help.step.general": "We need some basic info about your home to estimate your energy costs. Everything's on your lease or DPE.",
+    "help.step.envelope": "Your building envelope (walls, roof, floor, windows) determines how much heat — and money — escapes. It's often the biggest savings opportunity.",
+    "help.step.heating": "Heating is 60–70% of your energy bill. The type of system and its age make all the difference.",
+    "help.step.energy": "The type of energy you use directly affects your cost per kWh and your DPE score.",
+    "help.step.ventilation": "Poor ventilation can add 25% to your heating bill. A few simple checks are all it takes.",
+    "help.step.currentdpe": "If you already have a DPE, we'll compare our estimate with your official diagnostic.",
+    "help.step.usage": "Your daily habits have a big impact on your bill. We'll ask a few questions to personalise your recommendations.",
+
+    // Results page
+    "results.none.title": "No results available",
+    "results.none.desc": "Fill in the questionnaire to find out how much you can save!",
+    "results.none.cta": "Start the diagnostic",
+    "results.title": "Your energy diagnostic",
+    "results.subtitle": "Here's what your home costs you — and what you can save",
+    "results.class": "Estimated class",
+    "results.consumption": "Estimated consumption",
+    "results.disclaimer": "Indicative estimate. This does not replace an official DPE by a certified assessor.",
+
+    // Results — Current Performance
+    "results.performance.title": "Current performance",
+    "results.performance.annual_cost": "Estimated annual cost",
+    "results.performance.annual_cost.note": "Based on average price of €0.21/kWh",
+    "results.performance.monthly": "roughly",
+    "results.performance.monthly.unit": "€/month",
+    "results.performance.emissions": "Estimated CO₂ emissions",
+    "results.performance.emissions.unit": "kg CO₂/yr",
+    "results.performance.emissions.note": "Equivalent to",
+    "results.performance.emissions.car_km": "km by car",
+
+    // Results — Estimated Costs
+    "results.costs.title": "Your spending breakdown",
+
+    "results.breakdown": "Consumption breakdown",
+    "results.breakdown.heating": "Heating",
+    "results.breakdown.hotwater": "Hot water",
+    "results.breakdown.envelope": "Losses through walls/windows",
+    "results.weaknesses": "What costs you the most",
+    "results.weaknesses.empty": "Well done! Your home is already well optimised. No major unnecessary spending found.",
+    "results.cat.envelope": "Envelope",
+    "results.cat.heating": "Heating",
+    "results.cat.ventilation": "Ventilation",
+    "results.impact.high": "High impact",
+    "results.impact.medium": "Medium impact",
+    "results.impact.low": "Low impact",
+
+    // Quick Wins
+    "results.quickwins.title": "Immediate savings — no renovation needed",
+    "results.quickwins.subtitle": "Simple actions to cut your bill starting this month.",
+    "results.quickwins.already_good": "You're already doing great! We couldn't find any additional quick wins to recommend.",
+
+    // Renovation Recommendations
+    "results.reno.title": "Recommended renovations",
+    "results.reno.subtitle": "Concrete actions with costs, savings, and return on investment.",
+    "results.reno.empty": "Your home is already in good shape! No priority renovations identified.",
+
+    "results.recommendations": "Recommended action plan",
+    "results.recommendations.subtitle": "Concrete recommendations with costs, estimated savings, and aid available in Paris.",
+    "results.priority.high": "High priority",
+    "results.priority.medium": "Medium priority",
+    "results.priority.low": "Low priority",
+    "results.saving": "savings",
+    "results.dpe_impact": "DPE Impact",
+    "results.comfort": "Comfort",
+    "results.bill": "Return on Investment",
+    "results.cost": "Estimated cost",
+    "results.aid": "Available aid",
+    "results.providers": "Where to get advice",
+    "results.edu.title": "Good to know",
+    "results.edu.1.title": "Your DPE class isn't set in stone",
+    "results.edu.1.desc": "Every weak point we identified can be fixed. Savings are often quicker than you'd think.",
+    "results.edu.2.title": "Insulate first, then heat",
+    "results.edu.2.desc": "Changing your heating without insulating is like heating the outdoors. Good insulation cuts your needs and the cost of everything else.",
+    "results.edu.3.title": "Small actions add up",
+    "results.edu.3.desc": "Lowering your thermostat by 1°C saves 7% on your bill. Over 12 months, that's real money.",
+    "results.redo": "Redo the diagnostic",
+    "results.export": "Download as PDF",
+
+    // Comparison
+    "results.comparison.title": "Comparison with your official DPE",
+    "results.comparison.assigned": "Your official DPE",
+    "results.comparison.estimated": "Our estimate",
+    "results.comparison.worse": "Our estimate shows higher consumption than your official DPE. This may reflect usage habits or factors our simplified questionnaire doesn't capture.",
+    "results.comparison.better": "Our estimate is more favourable than your official DPE. Your energy-saving efforts are paying off!",
+    "results.comparison.same": "Our estimate is consistent with your official DPE.",
+
+    // ROI
+    "results.roi.title": "Return on Investment",
+    "results.roi.subtitle": "How long it takes for each renovation to pay for itself through lower bills.",
+    "results.roi.currentbill": "Your estimated annual bill",
+    "results.roi.year": "year",
+    "results.roi.years_payback": "years",
+    "results.roi.yr": "y",
+    "results.roi.cost": "Est. cost",
+    "results.roi.saving": "Saving/yr",
+    "results.roi.payback": "Pays back in",
+    "results.roi.userprovided": "your actual bill",
+    "results.roi.disclaimer": "Based on average energy price of €0.21/kWh. Actual amounts depend on your contract.",
+
+    // Companies
+    "results.companies": "Recommended companies",
+    "results.companies.disclaimer": "Companies shown for illustration — real providers will be added soon.",
+
+    // Small wins
+    "smallwins.title": "Quick savings 💡",
+    "smallwins.subtitle": "Simple actions, savings starting this month",
+    "smallwins.month": "month",
+    "smallwins.shower": "Shorten your showers by 5 min",
+    "smallwins.thermostat": "Lower the thermostat by 1°C",
+    "smallwins.standby": "Turn off devices on standby",
+    "smallwins.offpeak": "Run the washing machine during off-peak hours",
+    "smallwins.dryer": "Air-dry clothes when possible",
+    "smallwins.lights": "Turn off lights when leaving a room",
+    "smallwins.programmable": "Get a programmable thermostat (~€50)",
+
+    // Validation
+    "validation.housing_type": "Please select your housing type",
+    "validation.surface": "Please indicate your home's surface area",
+    "validation.arrondissement": "Please select your arrondissement",
+    "validation.construction": "Please indicate the construction period",
+    "validation.window_type": "Please select your window glazing type",
+    "validation.orientation": "Please indicate the main orientation",
+    "validation.heating_type": "Please select at least one heating type",
+    "validation.energy_source": "Please select at least one energy source",
+    "validation.ventilation": "Please select your ventilation type",
+    "validation.occupants": "Please indicate the number of occupants",
+    "validation.hot_water": "Please indicate your hot water usage",
+
+    // Results enhanced
+    "results.summary.title": "Your diagnostic summary",
+    "results.summary.class_desc.A": "Excellent! Your home is very energy-efficient.",
+    "results.summary.class_desc.B": "Very good. Your home is energy-efficient.",
+    "results.summary.class_desc.C": "Decent. A few improvements could cut your costs.",
+    "results.summary.class_desc.D": "Average. There's real savings potential.",
+    "results.summary.class_desc.E": "Energy-hungry. Renovations can significantly cut your bills.",
+    "results.summary.class_desc.F": "Very energy-hungry. Renovations are strongly recommended.",
+    "results.summary.class_desc.G": "Energy sieve. Acting now could save you thousands per year.",
+    "results.potential.title": "Your savings potential",
+    "results.potential.if_renovated": "If you complete the recommended works:",
+    "results.potential.annual_saving": "Estimated saving",
+    "results.potential.new_class": "Target class",
+    "results.potential.value_gain": "Estimated property value gain",
+    "results.potential.monthly_saving": "Monthly saving",
+    "results.potential.property_value": "of property value",
+    "results.next_steps.title": "Next steps",
+    "results.next_steps.1": "1. Contact the Agence Parisienne du Climat (free)",
+    "results.next_steps.2": "2. Get a quote from a certified (RGE) contractor",
+    "results.next_steps.3": "3. Check your eligible aids on france-renov.gouv.fr",
+    "results.next_steps.4": "4. Get an official DPE assessment (~€150)",
+
+    // Results sidebar nav
+    "results.nav.overview": "Overview",
+    "results.nav.energy": "Energy contract",
+    "results.nav.habits": "Habit changes",
+    "results.nav.renovations": "Renovation options",
+    "results.nav.nextsteps": "Next steps",
+
+    // Energy subscription section
+    "results.energy_sub.title": "Optimise your energy contract",
+    "results.energy_sub.subtitle": "No renovation needed — a simple contract switch can lower your bill.",
+    "results.energy_sub.current": "Your estimated current spend",
+    "results.energy_sub.optimized": "With an optimised contract",
+    "results.energy_sub.saving": "Potential saving",
+    "results.energy_sub.tip1": "Compare offers on energie-info.fr (free public service)",
+    "results.energy_sub.tip2": "Choose an off-peak tariff if you can shift your usage",
+    "results.energy_sub.tip3": "Check your subscribed power isn't oversized",
+    "results.energy_sub.per_year": "/yr",
+    "results.energy_sub.per_month": "/mo",
+
+    // Habits section
+    "results.habits.title": "Habit changes",
+    "results.habits.subtitle": "Simple actions to lower your bill with zero investment.",
+    "results.habits.total_saving": "Total estimated saving",
+
+    // Renovations section enhanced
+    "results.reno.co2_saved": "CO₂ avoided",
+    "results.reno.co2_unit": "kg/yr",
+    "results.reno.roi_pct": "Return",
+    "results.reno.total_investment": "Total estimated investment",
+    "results.reno.total_annual_saving": "Total annual saving",
+    "results.reno.total_co2": "CO₂ avoided per year",
+    "results.reno.global_payback": "Pays back in",
+
+    // Questionnaire energy preview
+    "questionnaire.energy_preview": "Estimated energy spend",
+    "questionnaire.energy_preview.year": "per year",
+    "questionnaire.energy_preview.month": "per month",
+  },
+};
+
+export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [lang, setLang] = useState<Language>("fr");
+
+  const toggleLang = useCallback(() => {
+    setLang((prev) => (prev === "fr" ? "en" : "fr"));
+  }, []);
+
+  const t = useCallback(
+    (key: string) => translations[lang]?.[key] || key,
+    [lang]
+  );
+
+  return (
+    <I18nContext.Provider value={{ lang, toggleLang, t }}>
+      {children}
+    </I18nContext.Provider>
+  );
+};

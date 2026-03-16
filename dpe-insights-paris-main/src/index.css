@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 97%;
+    --foreground: 220 25% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 10%;
+
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 94%;
+    --secondary-foreground: 220 20% 25%;
+
+    --muted: 220 14% 92%;
+    --muted-foreground: 220 10% 46%;
+
+    --accent: 262 83% 58%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 13% 88%;
+    --input: 220 13% 88%;
+    --ring: 221 83% 53%;
+
+    --radius: 0.75rem;
+
+    /* Semantic colour palette */
+    --info: 221 83% 53%;
+    --info-foreground: 0 0% 100%;
+    --success: 152 60% 40%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 38 92% 14%;
+    --rose: 346 77% 50%;
+    --rose-foreground: 0 0% 100%;
+    --indigo: 262 83% 58%;
+    --indigo-foreground: 0 0% 100%;
+    --teal: 174 60% 36%;
+    --teal-foreground: 0 0% 100%;
+    --amber: 38 92% 50%;
+    --amber-foreground: 38 92% 14%;
+
+    /* DPE Scale Colors */
+    --dpe-a: 145 63% 35%;
+    --dpe-b: 100 55% 45%;
+    --dpe-c: 72 70% 48%;
+    --dpe-d: 48 95% 50%;
+    --dpe-e: 30 95% 52%;
+    --dpe-f: 15 90% 50%;
+    --dpe-g: 0 75% 48%;
+
+    /* Custom tokens */
+    --hero-gradient: linear-gradient(135deg, hsl(221 83% 53%), hsl(262 83% 58%));
+    --card-shadow: 0 4px 24px -4px hsl(221 83% 53% / 0.08);
+    --card-shadow-hover: 0 8px 32px -4px hsl(221 83% 53% / 0.14);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 220 20% 7%;
+    --foreground: 220 15% 92%;
+
+    --card: 220 18% 11%;
+    --card-foreground: 220 15% 92%;
+
+    --popover: 220 18% 11%;
+    --popover-foreground: 220 15% 92%;
+
+    --primary: 221 83% 60%;
+    --primary-foreground: 220 20% 7%;
+
+    --secondary: 220 15% 16%;
+    --secondary-foreground: 220 15% 85%;
+
+    --muted: 220 12% 15%;
+    --muted-foreground: 220 10% 55%;
+
+    --accent: 262 70% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 12% 18%;
+    --input: 220 12% 18%;
+    --ring: 221 83% 60%;
+
+    --info: 221 83% 60%;
+    --success: 152 50% 42%;
+    --warning: 38 80% 50%;
+    --rose: 346 70% 55%;
+    --indigo: 262 70% 60%;
+    --teal: 174 50% 42%;
+    --amber: 38 80% 50%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .hero-gradient {
+    background: var(--hero-gradient);
+  }
+
+  .text-gradient {
+    background: var(--hero-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .card-elevated {
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .card-elevated:hover {
+    box-shadow: var(--card-shadow-hover);
+  }
+
+  .dpe-a { background-color: hsl(var(--dpe-a)); color: white; }
+  .dpe-b { background-color: hsl(var(--dpe-b)); color: white; }
+  .dpe-c { background-color: hsl(var(--dpe-c)); color: hsl(var(--foreground)); }
+  .dpe-d { background-color: hsl(var(--dpe-d)); color: hsl(var(--foreground)); }
+  .dpe-e { background-color: hsl(var(--dpe-e)); color: white; }
+  .dpe-f { background-color: hsl(var(--dpe-f)); color: white; }
+  .dpe-g { background-color: hsl(var(--dpe-g)); color: white; }
+}
