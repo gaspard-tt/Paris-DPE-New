@@ -5,9 +5,7 @@ node_modules/
 dist/
 build/
 
-# Environment variables — never commit these
-.env.local
-.env.*.local
+# Environment variables
 .env
 
 # macOS
