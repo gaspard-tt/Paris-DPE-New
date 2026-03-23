@@ -16,6 +16,7 @@ import Header from "@/components/Header";
 import type { FormData } from "@/lib/types";
 import { DEFAULT_FORM_DATA } from "@/lib/types";
 import { calculateDPE } from "@/lib/dpe-calculator";
+import { predictDPE, saveResponse } from "@/lib/dpe-service";
 import { useI18n } from "@/lib/i18n";
 
 /** Returns an error message key if the step is incomplete, or null if valid */
@@ -124,16 +125,30 @@ const Questionnaire = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validationError) {
       setShowValidation(true);
       return;
     }
     setIsCalculating(true);
-    setTimeout(() => {
-      const result = calculateDPE(formData, lang);
-      navigate("/resultats", { state: { result, formData } });
-    }, 2000);
+
+    // Rule-based calc: folds in all habits → gives us consumption + weaknesses + recommendations
+    const result = calculateDPE(formData, lang);
+    const ruleClass = result.dpeClass;
+
+    // ML prediction and minimum animation time run in parallel
+    const [mlClass] = await Promise.all([
+      predictDPE(formData, result.consumption).catch(() => null),
+      new Promise<void>((resolve) => setTimeout(resolve, 2000)),
+    ]);
+
+    // ML letter overrides rule-based letter when available
+    if (mlClass) result.dpeClass = mlClass;
+
+    // Save everything to Supabase (fire-and-forget — don't block navigation)
+    saveResponse(formData, mlClass, ruleClass, result.consumption).catch(console.error);
+
+    navigate("/resultats", { state: { result, formData } });
   };
 
   const isLastStep = currentStep === STEP_LABELS.length - 1;

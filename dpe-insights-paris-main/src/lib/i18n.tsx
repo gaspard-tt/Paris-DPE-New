@@ -56,7 +56,7 @@ const translations: Record<Language, Record<string, string>> = {
     "cta.button": "Estimer mes économies",
     "footer.disclaimer": "Cet outil fournit une estimation indicative. Il ne remplace pas un DPE officiel réalisé par un diagnostiqueur certifié.",
     "footer.copy": "Mon DPE Paris — Simulateur éducatif de performance énergétique",
-    "footer.privacy": "Vos données restent sur votre appareil — rien n'est envoyé ni stocké.",
+    "footer.privacy": "Vos réponses sont enregistrées de façon sécurisée pour améliorer le simulateur.",
 
     // About section
     "about.title": "Pourquoi cet outil ?",
@@ -503,7 +503,7 @@ const translations: Record<Language, Record<string, string>> = {
     "cta.button": "Estimate my savings",
     "footer.disclaimer": "This tool provides an indicative estimate. It does not replace an official DPE performed by a certified assessor.",
     "footer.copy": "My DPE Paris — Educational energy performance simulator",
-    "footer.privacy": "Your data stays on your device — nothing is sent or stored.",
+    "footer.privacy": "Your answers are securely recorded to improve the simulator.",
 
     // About section
     "about.title": "Why this tool?",
