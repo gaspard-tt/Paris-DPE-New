@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, BarChart3, Loader2, Lock, AlertCircle, Euro } from "lucide-react";
+import { ArrowLeft, ArrowRight, BarChart3, Loader2, Lock, AlertCircle, Euro, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import WizardProgress from "@/components/WizardProgress";
 import FloatingHelp from "@/components/FloatingHelp";
@@ -19,42 +19,33 @@ import { calculateDPE } from "@/lib/dpe-calculator";
 import { predictDPE, saveResponse } from "@/lib/dpe-service";
 import { useI18n } from "@/lib/i18n";
 
-/** Returns an error message key if the step is incomplete, or null if valid */
 function validateStep(step: number, data: FormData, t: (k: string) => string): string | null {
   switch (step) {
-    case 0: // General Info
+    case 0:
       if (!data.housingType) return t("validation.housing_type");
       if (!data.surfaceArea) return t("validation.surface");
       if (!data.arrondissement) return t("validation.arrondissement");
       if (!data.constructionPeriod) return t("validation.construction");
       return null;
-
-    case 1: // Current DPE — DPE class or "unknown" both fine, bill is optional
-      // No strict requirement — user can skip DPE class (defaults to unknown)
+    case 1:
       return null;
-
-    case 2: // Envelope
+    case 2:
       if (!data.windowType) return t("validation.window_type");
       if (!data.orientation) return t("validation.orientation");
       return null;
-
-    case 3: // Heating
+    case 3:
       if (!data.heatingTypes || data.heatingTypes.length === 0) return t("validation.heating_type");
       return null;
-
-    case 4: // Energy
+    case 4:
       if (!data.energySources || data.energySources.length === 0) return t("validation.energy_source");
       return null;
-
-    case 5: // Ventilation
+    case 5:
       if (!data.ventilationType) return t("validation.ventilation");
       return null;
-
-    case 6: // Occupancy
+    case 6:
       if (!data.occupants) return t("validation.occupants");
       if (!data.hotWaterUsage) return t("validation.hot_water");
       return null;
-
     default:
       return null;
   }
@@ -86,7 +77,6 @@ const Questionnaire = () => {
 
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
-    // Clear validation error as user interacts
     if (showValidation) setShowValidation(false);
   };
 
@@ -95,7 +85,7 @@ const Questionnaire = () => {
     [currentStep, formData, t]
   );
 
-  // Live energy cost estimate
+  // Only used when user doesn't know their bill
   const energyEstimate = useMemo(() => {
     if (!formData.surfaceArea || !formData.constructionPeriod) return null;
     try {
@@ -108,10 +98,7 @@ const Questionnaire = () => {
   }, [formData, lang]);
 
   const nextStep = () => {
-    if (validationError) {
-      setShowValidation(true);
-      return;
-    }
+    if (validationError) { setShowValidation(true); return; }
     if (currentStep < STEP_LABELS.length - 1) {
       setDirection(1);
       setCurrentStep((s) => s + 1);
@@ -126,28 +113,20 @@ const Questionnaire = () => {
   };
 
   const handleSubmit = async () => {
-    if (validationError) {
-      setShowValidation(true);
-      return;
-    }
+    if (validationError) { setShowValidation(true); return; }
     setIsCalculating(true);
 
-    // Rule-based calc: folds in all habits → gives us consumption + weaknesses + recommendations
     const result = calculateDPE(formData, lang);
     const ruleClass = result.dpeClass;
 
-    // ML prediction and minimum animation time run in parallel
     const [mlClass] = await Promise.all([
       predictDPE(formData, result.consumption).catch(() => null),
       new Promise<void>((resolve) => setTimeout(resolve, 2000)),
     ]);
 
-    // ML letter overrides rule-based letter when available
     if (mlClass) result.dpeClass = mlClass;
 
-    // Save everything to Supabase (fire-and-forget — don't block navigation)
     saveResponse(formData, mlClass, ruleClass, result.consumption).catch(console.error);
-
     navigate("/resultats", { state: { result, formData } });
   };
 
@@ -183,10 +162,8 @@ const Questionnaire = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="flex flex-col items-center gap-6"
           >
-            <div className="relative">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-                <Loader2 className="h-10 w-10 animate-spin text-primary" />
-              </div>
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+              <Loader2 className="h-10 w-10 animate-spin text-primary" />
             </div>
             <h2 className="text-2xl font-bold text-foreground">{t("loading.title")}</h2>
             <p className="max-w-md text-muted-foreground">{t("loading.desc")}</p>
@@ -241,22 +218,50 @@ const Questionnaire = () => {
             </motion.div>
           )}
 
-          {/* Energy estimate preview */}
-          {energyEstimate && currentStep >= 2 && (
+          {/* Bill banner — shown from step 2 onwards */}
+          {currentStep >= 2 && (formData.annualBill || energyEstimate) && (
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 flex items-center justify-between rounded-lg border border-primary/20 bg-primary/5 px-4 py-3"
+              className={`mt-4 flex items-center justify-between rounded-lg border px-4 py-3 ${
+                formData.annualBill
+                  ? "border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950/30"
+                  : "border-primary/20 bg-primary/5"
+              }`}
             >
-              <div className="flex items-center gap-2">
-                <Euro className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium text-foreground">{t("questionnaire.energy_preview")}</span>
-              </div>
-              <div className="text-right">
-                <span className="text-lg font-bold text-primary">~{energyEstimate.toLocaleString()} €</span>
-                <span className="text-xs text-muted-foreground ml-1">/{t("questionnaire.energy_preview.year")}</span>
-                <span className="text-xs text-muted-foreground ml-2">({Math.round(energyEstimate / 12)} €/{t("questionnaire.energy_preview.month")})</span>
-              </div>
+              {formData.annualBill ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+                    <span className="text-sm font-medium text-green-800 dark:text-green-300">
+                      {lang === "fr" ? "Facture réelle utilisée" : "Using your real bill"}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-lg font-bold text-green-700 dark:text-green-400">
+                      {formData.annualBill.toLocaleString()} €
+                    </span>
+                    <span className="text-xs text-green-600 dark:text-green-500 ml-1">
+                      /{lang === "fr" ? "an" : "year"}
+                    </span>
+                    <span className="text-xs text-green-600 dark:text-green-500 ml-2">
+                      ({Math.round(formData.annualBill / 12)} €/{lang === "fr" ? "mois" : "month"})
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2">
+                    <Euro className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium text-foreground">{t("questionnaire.energy_preview")}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-lg font-bold text-primary">~{energyEstimate!.toLocaleString()} €</span>
+                    <span className="text-xs text-muted-foreground ml-1">/{t("questionnaire.energy_preview.year")}</span>
+                    <span className="text-xs text-muted-foreground ml-2">({Math.round(energyEstimate! / 12)} €/{t("questionnaire.energy_preview.month")})</span>
+                  </div>
+                </>
+              )}
             </motion.div>
           )}
 
