@@ -704,14 +704,6 @@ const Results = () => {
                           <div className="flex items-center gap-2 shrink-0">
                             <span className="rounded-full bg-success/10 px-3 py-1 text-xs font-bold text-success">{win.savingLabel}</span>
                             
-                              href={win.source.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              title={win.source.label}
-                              style={{display:"flex",alignItems:"center",justifyContent:"center",width:"20px",height:"20px",borderRadius:"50%",fontSize:"10px",fontWeight:"bold",color:"var(--muted-foreground)",textDecoration:"none",flexShrink:0}}
-                            >
-                              ?
-                            </a>
                           </div>
                         </motion.div>
                       ))}
