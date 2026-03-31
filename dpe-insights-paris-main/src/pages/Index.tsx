@@ -217,7 +217,7 @@ const Index = () => {
                 { name: "Hannah", role: t("about.team.hannah") },
                 { name: "Gaspard", role: t("about.team.gaspard") },
                 { name: "Amélie", role: t("about.team.amelie") },
-                { name: "Nico", role: t("about.team.nico") },
+                { name: "Nicodème", role: t("about.team.nicodème") },
               ].map((member) => (
                 <div key={member.name} className="rounded-xl border bg-card p-4 text-center">
                   <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
