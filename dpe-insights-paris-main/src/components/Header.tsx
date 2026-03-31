@@ -21,7 +21,7 @@ const Header = () => {
             <Zap className="h-5 w-5 text-primary-foreground" />
           </div>
           <span className="text-xl font-bold text-foreground">
-            {t("app.name")}
+            Écowatt
           </span>
         </Link>
 
