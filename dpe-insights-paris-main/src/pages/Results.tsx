@@ -248,7 +248,9 @@ const Results = () => {
     return wins;
   }, [formData, currentAnnualBill, t]);
 
-  const totalHabitSaving = personalizedQuickWins.reduce((s, w) => s + w.saving, 0);
+ const totalHabitSavingRaw = personalizedQuickWins.reduce((s, w) => s + w.saving, 0);
+  // Cap at 20% of annual bill — habit changes cannot realistically exceed this
+  const totalHabitSaving = Math.min(totalHabitSavingRaw, Math.round(currentAnnualBill * 0.20));
 
   if (!state || !recalculated) {
     return (
