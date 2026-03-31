@@ -661,7 +661,7 @@ const Results = () => {
             </motion.div>
           </section>
 
-          {/* ═══════════════════════════════════════════
+       {/* ═══════════════════════════════════════════
               SECTION 3: HABIT CHANGES
           ═══════════════════════════════════════════ */}
           <section ref={(el) => { sectionRefs.current.habits = el; }}>
@@ -708,7 +708,7 @@ const Results = () => {
                               target="_blank"
                               rel="noopener noreferrer"
                               title={win.source.label}
-                            style={{display:"flex",alignItems:"center",justifyContent:"center",width:"20px",height:"20px",borderRadius:"50%",fontSize:"10px",fontWeight:"bold",color:"var(--muted-foreground)",textDecoration:"none",flexShrink:0}}
+                              style={{display:"flex",alignItems:"center",justifyContent:"center",width:"20px",height:"20px",borderRadius:"50%",fontSize:"10px",fontWeight:"bold",color:"var(--muted-foreground)",textDecoration:"none",flexShrink:0}}
                             >
                               ?
                             </a>
