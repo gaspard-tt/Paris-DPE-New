@@ -26,10 +26,10 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Index page
     "hero.badge": "Simulateur DPE gratuit — Paris",
-    "hero.title.1": "Découvrez combien vous pouvez",
-    "hero.title.highlight": "économiser",
-    "hero.title.2": "sur vos factures d'énergie",
-    "hero.desc": "Estimez votre classe DPE, identifiez ce qui vous coûte le plus cher et découvrez comment réduire vos factures — spécifiquement adapté aux logements parisiens.",
+   "hero.title.1": "Découvrez combien vous pouvez",
+"hero.title.highlight": "économiser",
+"hero.title.2": "sur vos factures d'énergie",
+"hero.desc": "Répondez à quelques questions sur votre logement et vos habitudes — on vous dit où part votre argent, et comment y remédier. Ce n'est pas un DPE officiel, mais c'est ce qu'un DPE officiel ne vous dit pas : par où commencer.",
     "hero.cta": "Estimer mes économies",
     "hero.sub": "Gratuit · 5 minutes · Sans inscription · Vos données restent privées",
     "dpe.title": "Qu'est-ce que le DPE ?",
