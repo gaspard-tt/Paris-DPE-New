@@ -217,40 +217,89 @@ const Results = () => {
   const totalRenoCO2 = roiItems.reduce((s, r) => s + r.co2Saved, 0);
   const globalPayback = totalRenoSaving > 0 ? Math.round(totalRenoCost / totalRenoSaving) : 0;
 
-  // Personalised quick wins
+// Personalised quick wins — sourced from ADEME
   const personalizedQuickWins = useMemo(() => {
-    const occupants = formData?.occupants || 2;
-    const wins: { icon: React.ElementType; text: string; saving: number; savingLabel: string }[] = [];
+    const wins: {
+      icon: React.ElementType;
+      text: string;
+      saving: number;
+      savingLabel: string;
+      source: { label: string; url: string };
+    }[] = [];
 
-    const addWin = (icon: React.ElementType, text: string, monthlySaving: number) => {
-      wins.push({ icon, text, saving: monthlySaving * 12, savingLabel: `~${monthlySaving} €/${t("smallwins.month")}` });
+    const ADEME_THERMOSTAT = {
+      label: "ADEME – Thermostat programmable",
+      url: "https://agirpourlatransition.ademe.fr/particuliers/maison/chauffage/reduire-facture-chauffage-thermostat-programmable",
+    };
+    const ADEME_ECOGESTES = {
+      label: "ADEME – 20 solutions pour réduire sa consommation",
+      url: "https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/20-solutions-reduire-consommation-delectricite",
+    };
+    const ADEME_EAU = {
+      label: "ADEME – Réduire ses factures d'eau et d'énergie",
+      url: "https://agirpourlatransition.ademe.fr/particuliers/maison/astuces-reduire-facture-deau-denergie",
     };
 
-    if (!formData?.thermostatTemp || formData.thermostatTemp > 19.5) {
-      addWin(ThermometerSun, t("smallwins.thermostat"), Math.round(currentAnnualBill * 0.07 / 12));
+    const addWin = (
+      icon: React.ElementType,
+      text: string,
+      monthlySaving: number,
+      source: { label: string; url: string }
+    ) => {
+      if (monthlySaving < 1) return;
+      wins.push({ icon, text, saving: monthlySaving * 12, savingLabel: `~${monthlySaving} €/${t("smallwins.month")}`, source });
+    };
+
+    // ADEME: -1°C = 7% savings on heating. Heating = 66% of bill.
+    if (formData?.thermostatTemp && formData.thermostatTemp > 19.5) {
+      const degreesOver = Math.round(formData.thermostatTemp - 19);
+      addWin(ThermometerSun, t("smallwins.thermostat"), Math.round(currentAnnualBill * 0.66 * 0.07 * degreesOver / 12), ADEME_THERMOSTAT);
     }
-    if (formData?.leavesLightsOn !== false) {
-      addWin(Tv, t("smallwins.standby"), Math.round(occupants * 5));
-    }
-    if (formData?.leavesLightsOn === true) {
-      addWin(Lightbulb, t("smallwins.lights"), Math.round(currentAnnualBill * 0.03 / 12));
-    }
-    if (formData?.hotWaterUsage !== "low") {
-      addWin(ShowerHead, t("smallwins.shower"), Math.round(occupants * 15));
-    }
-    addWin(Timer, t("smallwins.offpeak"), Math.round(currentAnnualBill * 0.05 / 12));
-    if (formData?.usesDryer === true) {
-      addWin(Shirt, t("smallwins.dryer"), Math.round(occupants * 8));
-    }
+
+    // ADEME: programmable thermostat = up to 15% savings on heating
     if (formData?.programmableHeating !== true) {
-      addWin(Timer, t("smallwins.programmable"), Math.round(currentAnnualBill * 0.10 / 12));
+      addWin(Timer, t("smallwins.programmable"), Math.round(currentAnnualBill * 0.66 * 0.15 / 12), ADEME_THERMOSTAT);
     }
+
+    // ADEME: hot water = 12% of energy bill. High vs low usage = ~20% difference on that portion.
+    if (formData?.hotWaterUsage === "high") {
+      addWin(ShowerHead, t("smallwins.shower"), Math.round(currentAnnualBill * 0.12 * 0.20 / 12), ADEME_EAU);
+    } else if (formData?.hotWaterUsage === "average") {
+      addWin(ShowerHead, t("smallwins.shower"), Math.round(currentAnnualBill * 0.12 * 0.10 / 12), ADEME_EAU);
+    }
+
+    // ADEME: standby = ~10% of appliance electricity. Appliances = 15% of bill.
+    if (formData?.leavesLightsOn !== false) {
+      addWin(Tv, t("smallwins.standby"), Math.round(currentAnnualBill * 0.15 * 0.10 / 12), ADEME_ECOGESTES);
+    }
+
+    // ADEME: lighting = ~7% of appliance electricity
+    if (formData?.leavesLightsOn === true) {
+      addWin(Lightbulb, t("smallwins.lights"), Math.round(currentAnnualBill * 0.15 * 0.07 / 12), ADEME_ECOGESTES);
+    }
+
+    // Dryer — based on cycles/week × 0.5 kWh per cycle × €0.21, saving = air-drying half the time
+    if (formData?.usesDryer === true) {
+      const dryerCycles = formData?.laundryFrequency === "5_plus" ? 5 : formData?.laundryFrequency === "3_4" ? 3.5 : 1.5;
+      addWin(Shirt, t("smallwins.dryer"), Math.round(dryerCycles * 52 * 0.5 * 0.21 * 0.5 / 12), ADEME_ECOGESTES);
+    }
+
+    // Off-peak tariff — only relevant if using electric heating
+    if (formData?.heatingTypes?.some(h => h.startsWith("electric") || h === "heat_pump")) {
+      addWin(Timer, t("smallwins.offpeak"), Math.round(currentAnnualBill * 0.05 / 12), ADEME_ECOGESTES);
+    }
+
+    // Heating always on — same logic as programmable thermostat saving
+    if (formData?.heatingFrequency === "always") {
+      addWin(Flame, t("smallwins.heating_freq"), Math.round(currentAnnualBill * 0.66 * 0.08 / 12), ADEME_THERMOSTAT);
+    }
+
     return wins;
   }, [formData, currentAnnualBill, t]);
 
- const totalHabitSavingRaw = personalizedQuickWins.reduce((s, w) => s + w.saving, 0);
-  // Cap at 20% of annual bill — habit changes cannot realistically exceed this
-  const totalHabitSaving = Math.min(totalHabitSavingRaw, Math.round(currentAnnualBill * 0.20));
+  // Cap at 25% of bill — realistic ceiling for behaviour changes alone
+  const totalHabitSavingRaw = personalizedQuickWins.reduce((s, w) => s + w.saving, 0);
+  const totalHabitSaving = Math.min(totalHabitSavingRaw, Math.round(currentAnnualBill * 0.25));
 
   if (!state || !recalculated) {
     return (
