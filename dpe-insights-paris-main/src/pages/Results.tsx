@@ -708,7 +708,7 @@ const Results = () => {
                               target="_blank"
                               rel="noopener noreferrer"
                               title={win.source.label}
-                              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors text-[10px] font-bold"
+                            style={{display:"flex",alignItems:"center",justifyContent:"center",width:"20px",height:"20px",borderRadius:"50%",fontSize:"10px",fontWeight:"bold",color:"var(--muted-foreground)",textDecoration:"none",flexShrink:0}}
                             >
                               ?
                             </a>
