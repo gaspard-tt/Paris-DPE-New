@@ -701,7 +701,18 @@ const Results = () => {
                             </div>
                             <p className="text-sm font-medium text-foreground">{win.text}</p>
                           </div>
-                          <span className="shrink-0 rounded-full bg-success/10 px-3 py-1 text-xs font-bold text-success">{win.savingLabel}</span>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <span className="rounded-full bg-success/10 px-3 py-1 text-xs font-bold text-success">{win.savingLabel}</span>
+                            
+                              href={win.source.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title={win.source.label}
+                              className="flex h-5 w-5 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors text-[10px] font-bold"
+                            >
+                              ?
+                            </a>
+                          </div>
                         </motion.div>
                       ))}
                     </div>
