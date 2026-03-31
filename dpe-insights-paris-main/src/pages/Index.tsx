@@ -188,8 +188,8 @@ const Index = () => {
 
       {/* About / Team */}
       <section className="py-20">
-        <div className="container mx-auto max-w-3xl px-4 text-center">
-          <motion.div {...fadeInUp} transition={{ duration: 0.5 }}>
+        <div className="container mx-auto max-w-4xl px-4">
+          <motion.div {...fadeInUp} transition={{ duration: 0.5 }} className="text-center mb-10">
             <div className="flex justify-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-indigo/10">
                 <Users className="h-7 w-7 text-indigo" />
@@ -198,9 +198,36 @@ const Index = () => {
             <h2 className="mt-4 text-2xl font-bold text-foreground">
               {t("about.title")}
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
               {t("about.desc")}
             </p>
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              {t("about.disclaimer")}
+            </p>
+          </motion.div>
+
+          {/* Team */}
+          <motion.div {...fadeInUp} transition={{ duration: 0.5, delay: 0.1 }}>
+            <p className="text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-6">
+              {t("about.team.title")}
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+              {[
+                { name: "Nora", role: t("about.team.nora") },
+                { name: "Hannah", role: t("about.team.hannah") },
+                { name: "Gaspard", role: t("about.team.gaspard") },
+                { name: "Amélie", role: t("about.team.amelie") },
+                { name: "Nico", role: t("about.team.nico") },
+              ].map((member) => (
+                <div key={member.name} className="rounded-xl border bg-card p-4 text-center">
+                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                    {member.name[0]}
+                  </div>
+                  <p className="text-sm font-semibold text-foreground">{member.name}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{member.role}</p>
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
