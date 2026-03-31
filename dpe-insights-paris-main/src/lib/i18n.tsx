@@ -22,25 +22,25 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.home": "Accueil",
     "nav.diagnostic": "Diagnostic",
     "nav.results": "Résultats",
-    "app.name": "Mon DPE Paris",
+    "app.name": "Écowatt",
 
     // Index page
-    "hero.badge": "Simulateur DPE gratuit — Paris",
-   "hero.title.1": "Découvrez combien vous pouvez",
-"hero.title.highlight": "économiser",
-"hero.title.2": "sur vos factures d'énergie",
-"hero.desc": "Répondez à quelques questions sur votre logement et vos habitudes — on vous dit où part votre argent, et comment y remédier. Ce n'est pas un DPE officiel, mais c'est ce qu'un DPE officiel ne vous dit pas : par où commencer.",
+    "hero.badge": "Un projet étudiant · Forward College Paris",
+    "hero.title.1": "Découvrez combien vous pouvez",
+    "hero.title.highlight": "économiser",
+    "hero.title.2": "sur vos factures d'énergie",
+    "hero.desc": "Répondez à quelques questions sur votre logement et vos habitudes — on vous dit où part votre argent, et comment y remédier. Ce n'est pas un DPE officiel, mais c'est ce qu'un DPE officiel ne vous dit pas : par où commencer.",
     "hero.cta": "Estimer mes économies",
     "hero.sub": "Gratuit · 5 minutes · Sans inscription · Vos données restent privées",
     "dpe.title": "Qu'est-ce que le DPE ?",
     "dpe.desc": "Le Diagnostic de Performance Énergétique classe les logements de A (très performant) à G (très énergivore). Il est obligatoire pour vendre ou louer un bien en France.",
     "why.title": "Ce qu'on a entendu en faisant nos recherches",
-"why.bills.title": "\"Je paie trop et je ne sais pas pourquoi\"",
-"why.bills.desc": "La plupart des Parisiens qu'on a interrogés ne savaient pas comment leur facture était calculée — ni quoi faire pour la baisser.",
-"why.regulation.title": "\"Je voudrais rénover, mais je ne sais pas si ça vaut le coup\"",
-"why.regulation.desc": "Beaucoup savent qu'il faudrait agir, mais n'ont pas les chiffres pour décider. Rentabilité, aides disponibles, délai de retour sur investissement — tout ça reste flou.",
-"why.value.title": "\"Je ne peux rien faire, je suis locataire\"",
-"why.value.desc": "Les locataires ne peuvent pas rénover, mais ils peuvent changer leurs habitudes et leur abonnement. Même sans travaux, il y a des leviers concrets.",
+    "why.bills.title": "\"Je paie trop et je ne sais pas pourquoi\"",
+    "why.bills.desc": "La plupart des Parisiens qu'on a interrogés ne savaient pas comment leur facture était calculée — ni quoi faire pour la baisser.",
+    "why.regulation.title": "\"Je voudrais rénover, mais je ne sais pas si ça vaut le coup\"",
+    "why.regulation.desc": "Beaucoup savent qu'il faudrait agir, mais n'ont pas les chiffres pour décider. Rentabilité, aides disponibles, délai de retour sur investissement — tout ça reste flou.",
+    "why.value.title": "\"Je ne peux rien faire, je suis locataire\"",
+    "why.value.desc": "Les locataires ne peuvent pas rénover, mais ils peuvent changer leurs habitudes et leur abonnement. Même sans travaux, il y a des leviers concrets.",
     "tool.title": "Ce que vous allez obtenir",
     "tool.desc": "Un diagnostic personnalisé avec des chiffres concrets : combien vous dépensez, combien vous pouvez économiser, et par où commencer.",
     "tool.estimate.title": "Votre coût énergie estimé",
@@ -55,19 +55,19 @@ const translations: Record<Language, Record<string, string>> = {
     "cta.desc": "En 7 étapes simples, découvrez combien vous dépensez en énergie et comment réduire vos factures avec des actions concrètes.",
     "cta.button": "Estimer mes économies",
     "footer.disclaimer": "Cet outil fournit une estimation indicative. Il ne remplace pas un DPE officiel réalisé par un diagnostiqueur certifié.",
-    "footer.copy": "Mon DPE Paris — Simulateur éducatif de performance énergétique",
+    "footer.copy": "Écowatt — Un projet étudiant Forward College Paris",
     "footer.privacy": "Vos réponses sont enregistrées de façon sécurisée pour améliorer le simulateur.",
 
     // About section
-   "about.title": "Pourquoi on a construit ça",
-"about.desc": "On est cinq étudiants à Forward College Paris. Dans le cadre d'un défi Open Data sur l'efficacité énergétique des logements parisiens, on a réalisé que les outils existants répondaient soit aux professionnels, soit aux propriétaires avec budget — pas aux gens ordinaires qui veulent juste comprendre leur facture. Alors on a construit Écowatt : un simulateur honnête, sans jargon, ancré dans des données réelles.",
-"about.disclaimer": "Cet outil est une estimation éducative. Il ne remplace pas un DPE officiel — mais il vous dit ce qu'un DPE officiel ne vous dit pas : concrètement, par où commencer.",
-"about.team.title": "L'équipe",
-"about.team.nora": "Product Design",
-"about.team.hannah": "Product Manager",
-"about.team.gaspard": "Développement frontend",
-"about.team.amelie": "Marketing",
-"about.team.nicodème": "Données & backend",
+    "about.title": "Pourquoi on a construit ça",
+    "about.desc": "On est cinq étudiants à Forward College Paris. Dans le cadre d'un défi Open Data sur l'efficacité énergétique des logements parisiens, on a réalisé que les outils existants répondaient soit aux professionnels, soit aux propriétaires avec budget — pas aux gens ordinaires qui veulent juste comprendre leur facture. Alors on a construit Écowatt : un simulateur honnête, sans jargon, ancré dans des données réelles.",
+    "about.disclaimer": "Cet outil est une estimation éducative. Il ne remplace pas un DPE officiel — mais il vous dit ce qu'un DPE officiel ne vous dit pas : concrètement, par où commencer.",
+    "about.team.title": "L'équipe",
+    "about.team.nora": "Product Design",
+    "about.team.hannah": "Product Manager",
+    "about.team.gaspard": "Développement frontend",
+    "about.team.amelie": "Marketing",
+    "about.team.nico": "Données & backend",
 
     // 404 page
     "notfound.title": "Page introuvable",
@@ -147,7 +147,6 @@ const translations: Record<Language, Record<string, string>> = {
     "envelope.orientation": "Orientation principale",
     "envelope.orientation.help": "De quel côté donne la majorité de vos fenêtres ? Si le soleil entre le matin, c'est l'est. L'après-midi, c'est l'ouest. Toute la journée, c'est le sud.",
     "envelope.orientation.idk": "Pas sûr ? Regardez d'où vient le soleil",
-
     "envelope.dir.north": "Nord",
     "envelope.dir.south": "Sud",
     "envelope.dir.east": "Est",
@@ -223,7 +222,7 @@ const translations: Record<Language, Record<string, string>> = {
     "currentdpe.bill.idk": "Je ne connais pas ma facture",
     "currentdpe.bill.idk.tap": "Appuyez pour renseigner votre facture",
 
-    // StepOccupancy — expanded
+    // StepOccupancy
     "occupancy.thermostat": "Température de chauffage en hiver",
     "occupancy.thermostat.help": "À quelle température chauffez-vous ? Regardez votre thermostat ou votre radiateur. Chaque degré au-dessus de 19°C augmente votre facture d'environ 7%.",
     "occupancy.temperature": "Température",
@@ -247,38 +246,31 @@ const translations: Record<Language, Record<string, string>> = {
     // Expanded habits
     "habits.title": "Vos habitudes au quotidien",
     "habits.subtitle": "Ces infos nous aident à personnaliser vos recommandations d'économies.",
-
     "habits.heating_freq": "Fréquence de chauffage en hiver",
     "habits.heating_freq.help": "À quelle fréquence le chauffage tourne-t-il chez vous en hiver ?",
     "habits.heating_freq.rarely": "Rarement — je chauffe le moins possible",
     "habits.heating_freq.sometimes": "Parfois — seulement quand il fait vraiment froid",
     "habits.heating_freq.often": "Souvent — la plupart du temps en hiver",
     "habits.heating_freq.always": "Tout le temps — le chauffage tourne en continu",
-
     "habits.airing": "Aération du logement",
     "habits.airing.help": "À quelle fréquence ouvrez-vous les fenêtres pour aérer ? Aérer 10 min par jour suffit sans gaspiller trop de chaleur.",
     "habits.airing.never": "Jamais ou presque",
     "habits.airing.sometimes": "De temps en temps",
     "habits.airing.daily": "Tous les jours, ~10 min",
     "habits.airing.multiple": "Plusieurs fois par jour ou fenêtres souvent ouvertes",
-
     "habits.laundry": "Fréquence de lessive",
     "habits.laundry.help": "Combien de machines faites-vous par semaine ? Chaque cycle coûte environ 0,50 € en énergie.",
     "habits.laundry.1_2": "1 à 2 machines par semaine",
     "habits.laundry.3_4": "3 à 4 machines par semaine",
     "habits.laundry.5_plus": "5 machines ou plus par semaine",
-
     "habits.dishwasher": "Utilisez-vous un lave-vaisselle ?",
     "habits.dishwasher.help": "Un lave-vaisselle récent consomme moins d'eau et d'énergie que la vaisselle à la main.",
     "habits.yes": "Oui",
     "habits.no": "Non",
-
     "habits.dryer": "Utilisez-vous un sèche-linge ?",
     "habits.dryer.help": "Le sèche-linge est l'un des appareils les plus énergivores. Un cycle coûte environ 0,60 €.",
-
     "habits.lights": "Laissez-vous souvent les lumières allumées ?",
     "habits.lights.help": "Dans les pièces inoccupées — l'éclairage représente environ 10% de la facture d'électricité.",
-
     "habits.programmable": "Avez-vous un thermostat programmable ?",
     "habits.programmable.help": "Un thermostat programmable permet de baisser automatiquement la température la nuit et quand vous êtes absent.",
 
@@ -301,8 +293,6 @@ const translations: Record<Language, Record<string, string>> = {
     "results.class": "Classe estimée",
     "results.consumption": "Consommation estimée",
     "results.disclaimer": "Estimation indicative. Ce résultat ne remplace pas un DPE officiel réalisé par un diagnostiqueur certifié.",
-
-    // Results — Current Performance
     "results.performance.title": "Performance actuelle",
     "results.performance.annual_cost": "Coût annuel estimé",
     "results.performance.annual_cost.note": "Basé sur un prix moyen de 0,21 €/kWh",
@@ -312,10 +302,7 @@ const translations: Record<Language, Record<string, string>> = {
     "results.performance.emissions.unit": "kg CO₂/an",
     "results.performance.emissions.note": "Équivalent à",
     "results.performance.emissions.car_km": "km en voiture",
-
-    // Results — Estimated Costs
     "results.costs.title": "Répartition de vos dépenses",
-
     "results.breakdown": "Répartition de la consommation",
     "results.breakdown.heating": "Chauffage",
     "results.breakdown.hotwater": "Eau chaude",
@@ -328,17 +315,12 @@ const translations: Record<Language, Record<string, string>> = {
     "results.impact.high": "Impact élevé",
     "results.impact.medium": "Impact moyen",
     "results.impact.low": "Impact faible",
-
-    // Quick Wins
     "results.quickwins.title": "Économies immédiates — sans travaux",
     "results.quickwins.subtitle": "Des gestes simples pour réduire votre facture dès ce mois-ci.",
     "results.quickwins.already_good": "Vous faites déjà très bien ! On n'a pas trouvé de geste simple supplémentaire à vous recommander.",
-
-    // Renovation Recommendations
     "results.reno.title": "Travaux recommandés",
     "results.reno.subtitle": "Des actions concrètes avec coûts, économies et retour sur investissement.",
     "results.reno.empty": "Votre logement est déjà en bon état ! Pas de travaux prioritaires identifiés.",
-
     "results.recommendations": "Plan d'action recommandé",
     "results.recommendations.subtitle": "Des recommandations concrètes avec coûts, économies estimées et aides disponibles à Paris.",
     "results.priority.high": "Priorité haute",
@@ -360,16 +342,12 @@ const translations: Record<Language, Record<string, string>> = {
     "results.edu.3.desc": "Baisser le thermostat de 1°C, c'est 7% de moins sur la facture. Multiplié par 12 mois, ça fait une vraie différence.",
     "results.redo": "Refaire le diagnostic",
     "results.export": "Télécharger en PDF",
-
-    // Comparison
     "results.comparison.title": "Comparaison avec votre DPE officiel",
     "results.comparison.assigned": "Votre DPE officiel",
     "results.comparison.estimated": "Notre estimation",
     "results.comparison.worse": "Notre estimation indique une consommation plus élevée que votre DPE officiel. Cela peut s'expliquer par des habitudes de consommation ou des facteurs non captés par notre questionnaire.",
     "results.comparison.better": "Notre estimation est plus favorable que votre DPE officiel. Vos efforts d'économie d'énergie portent leurs fruits !",
     "results.comparison.same": "Notre estimation est cohérente avec votre DPE officiel.",
-
-    // ROI
     "results.roi.title": "Retour sur investissement",
     "results.roi.subtitle": "Combien de temps pour rentabiliser chaque rénovation grâce aux économies sur vos factures.",
     "results.roi.currentbill": "Votre facture annuelle estimée",
@@ -381,12 +359,8 @@ const translations: Record<Language, Record<string, string>> = {
     "results.roi.payback": "Rentabilisé en",
     "results.roi.userprovided": "votre facture réelle",
     "results.roi.disclaimer": "Estimations basées sur un prix moyen de 0,21 €/kWh. Les montants réels dépendent de votre contrat.",
-
-    // Companies
     "results.companies": "Entreprises recommandées",
     "results.companies.disclaimer": "Entreprises à titre illustratif — les vrais prestataires seront ajoutés prochainement.",
-
-    // Small wins
     "smallwins.title": "Économies rapides 💡",
     "smallwins.subtitle": "Des gestes simples, des économies dès ce mois-ci",
     "smallwins.month": "mois",
@@ -397,8 +371,8 @@ const translations: Record<Language, Record<string, string>> = {
     "smallwins.dryer": "Séchez le linge à l'air libre quand c'est possible",
     "smallwins.lights": "Éteignez les lumières en sortant des pièces",
     "smallwins.programmable": "Installez un thermostat programmable (~50 €)",
-
-    // Validation
+    "smallwins.heating_freq": "Réduisez le chauffage quand vous n'êtes pas là",
+    "smallwins.airing": "Évitez d'aérer trop longtemps en hiver",
     "validation.housing_type": "Veuillez sélectionner le type de logement",
     "validation.surface": "Veuillez indiquer la surface de votre logement",
     "validation.arrondissement": "Veuillez sélectionner votre arrondissement",
@@ -410,8 +384,6 @@ const translations: Record<Language, Record<string, string>> = {
     "validation.ventilation": "Veuillez sélectionner le type de ventilation",
     "validation.occupants": "Veuillez indiquer le nombre d'occupants",
     "validation.hot_water": "Veuillez indiquer votre consommation d'eau chaude",
-
-    // Results enhanced
     "results.summary.title": "Résumé de votre diagnostic",
     "results.summary.class_desc.A": "Excellent ! Votre logement est très performant.",
     "results.summary.class_desc.B": "Très bien. Votre logement est économe en énergie.",
@@ -432,15 +404,11 @@ const translations: Record<Language, Record<string, string>> = {
     "results.next_steps.2": "2. Demandez un devis à un artisan RGE",
     "results.next_steps.3": "3. Vérifiez vos aides sur france-renov.gouv.fr",
     "results.next_steps.4": "4. Faites réaliser un DPE officiel (~150 €)",
-
-    // Results sidebar nav
     "results.nav.overview": "Vue d'ensemble",
     "results.nav.energy": "Contrat énergie",
     "results.nav.habits": "Changements d'habitudes",
     "results.nav.renovations": "Travaux de rénovation",
     "results.nav.nextsteps": "Prochaines étapes",
-
-    // Energy subscription section
     "results.energy_sub.title": "Optimiser votre contrat d'énergie",
     "results.energy_sub.subtitle": "Sans travaux, un simple changement d'abonnement peut réduire votre facture.",
     "results.energy_sub.current": "Votre dépense actuelle estimée",
@@ -451,13 +419,9 @@ const translations: Record<Language, Record<string, string>> = {
     "results.energy_sub.tip3": "Vérifiez que votre puissance souscrite n'est pas surdimensionnée",
     "results.energy_sub.per_year": "/an",
     "results.energy_sub.per_month": "/mois",
-
-    // Habits section
     "results.habits.title": "Changements d'habitudes",
     "results.habits.subtitle": "Des gestes simples pour réduire votre facture sans aucun investissement.",
     "results.habits.total_saving": "Économie totale estimée",
-
-    // Renovations section enhanced
     "results.reno.co2_saved": "CO₂ évité",
     "results.reno.co2_unit": "kg/an",
     "results.reno.roi_pct": "Rendement",
@@ -465,8 +429,6 @@ const translations: Record<Language, Record<string, string>> = {
     "results.reno.total_annual_saving": "Économie annuelle totale",
     "results.reno.total_co2": "CO₂ évité par an",
     "results.reno.global_payback": "Rentabilisé en",
-
-    // Questionnaire energy preview
     "questionnaire.energy_preview": "Dépense énergie estimée",
     "questionnaire.energy_preview.year": "par an",
     "questionnaire.energy_preview.month": "par mois",
@@ -476,25 +438,25 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.home": "Home",
     "nav.diagnostic": "Diagnostic",
     "nav.results": "Results",
-    "app.name": "My DPE Paris",
+    "app.name": "Écowatt",
 
     // Index page
-    "hero.badge": "Free DPE Simulator — Paris",
+    "hero.badge": "A student project · Forward College Paris",
     "hero.title.1": "Find out how much you can",
     "hero.title.highlight": "save",
     "hero.title.2": "on your energy bills",
-    "hero.desc": "Estimate your DPE class, find out what costs you the most, and discover how to cut your bills — tailored to Parisian housing.",
+    "hero.desc": "Answer a few questions about your home and habits — we'll show you where your money goes and what you can do about it. This isn't an official DPE, but it tells you what an official DPE doesn't: where to start.",
     "hero.cta": "Estimate my savings",
     "hero.sub": "Free · 5 minutes · No sign-up · Your data stays private",
     "dpe.title": "What is DPE?",
     "dpe.desc": "The DPE (Diagnostic de Performance Énergétique) rates homes from A (very efficient) to G (very energy-intensive). It is mandatory for selling or renting property in France.",
     "why.title": "What we heard when we did our research",
-"why.bills.title": "\"I pay too much and I don't know why\"",
-"why.bills.desc": "Most Parisians we interviewed had no clear idea how their energy bill was calculated — or what they could do to lower it.",
-"why.regulation.title": "\"I'd like to renovate, but I don't know if it's worth it\"",
-"why.regulation.desc": "Many people know they should act, but don't have the numbers to decide. Profitability, available subsidies, payback time — it all stays unclear.",
-"why.value.title": "\"I can't do anything, I'm just a renter\"",
-"why.value.desc": "Renters can't renovate, but they can change their habits and their energy plan. Even without works, there are real levers to pull.",
+    "why.bills.title": "\"I pay too much and I don't know why\"",
+    "why.bills.desc": "Most Parisians we interviewed had no clear idea how their energy bill was calculated — or what they could do to lower it.",
+    "why.regulation.title": "\"I'd like to renovate, but I don't know if it's worth it\"",
+    "why.regulation.desc": "Many people know they should act, but don't have the numbers to decide. Profitability, available subsidies, payback time — it all stays unclear.",
+    "why.value.title": "\"I can't do anything, I'm just a renter\"",
+    "why.value.desc": "Renters can't renovate, but they can change their habits and their energy plan. Even without works, there are real levers to pull.",
     "tool.title": "What you'll get",
     "tool.desc": "A personalised diagnostic with real numbers: what you spend, what you can save, and where to start.",
     "tool.estimate.title": "Your estimated energy cost",
@@ -509,19 +471,19 @@ const translations: Record<Language, Record<string, string>> = {
     "cta.desc": "In 7 simple steps, discover what you spend on energy and how to cut your bills with concrete actions.",
     "cta.button": "Estimate my savings",
     "footer.disclaimer": "This tool provides an indicative estimate. It does not replace an official DPE performed by a certified assessor.",
-    "footer.copy": "My DPE Paris — Educational energy performance simulator",
+    "footer.copy": "Écowatt — A Forward College Paris student project",
     "footer.privacy": "Your answers are securely recorded to improve the simulator.",
 
     // About section
-   "about.title": "Why we built this",
-"about.desc": "We're five students at Forward College Paris. While working on an Open Data challenge about energy efficiency in Parisian housing, we realised that existing tools were built for professionals or well-funded homeowners — not for ordinary people who just want to understand their bill. So we built Écowatt: an honest simulator, no jargon, grounded in real data.",
-"about.disclaimer": "This tool is an educational estimate. It doesn't replace an official DPE — but it tells you what an official DPE doesn't: concretely, where to start.",
-"about.team.title": "The team",
-"about.team.nora": "Product Design",
-"about.team.hannah": "Product Manager",
-"about.team.gaspard": "Frontend Development",
-"about.team.amelie": "Marketing",
-"about.team.nicodème": "Data & Backend",
+    "about.title": "Why we built this",
+    "about.desc": "We're five students at Forward College Paris. While working on an Open Data challenge about energy efficiency in Parisian housing, we realised that existing tools were built for professionals or well-funded homeowners — not for ordinary people who just want to understand their bill. So we built Écowatt: an honest simulator, no jargon, grounded in real data.",
+    "about.disclaimer": "This tool is an educational estimate. It doesn't replace an official DPE — but it tells you what an official DPE doesn't: concretely, where to start.",
+    "about.team.title": "The team",
+    "about.team.nora": "Product Design",
+    "about.team.hannah": "Product Manager",
+    "about.team.gaspard": "Frontend Development",
+    "about.team.amelie": "Marketing",
+    "about.team.nico": "Data & Backend",
 
     // 404 page
     "notfound.title": "Page not found",
@@ -676,7 +638,7 @@ const translations: Record<Language, Record<string, string>> = {
     "currentdpe.bill.idk": "I don't know my bill",
     "currentdpe.bill.idk.tap": "Tap to enter your bill",
 
-    // StepOccupancy — expanded
+    // StepOccupancy
     "occupancy.thermostat": "Heating temperature in winter",
     "occupancy.thermostat.help": "What temperature do you heat to? Check your thermostat or radiator. Every degree above 19°C adds about 7% to your bill.",
     "occupancy.temperature": "Temperature",
@@ -700,38 +662,31 @@ const translations: Record<Language, Record<string, string>> = {
     // Expanded habits
     "habits.title": "Your daily habits",
     "habits.subtitle": "This helps us personalise your savings recommendations.",
-
     "habits.heating_freq": "How often do you heat in winter?",
     "habits.heating_freq.help": "How frequently does your heating run in winter?",
     "habits.heating_freq.rarely": "Rarely — I heat as little as possible",
     "habits.heating_freq.sometimes": "Sometimes — only when it's really cold",
     "habits.heating_freq.often": "Often — most of the time in winter",
     "habits.heating_freq.always": "All the time — heating runs continuously",
-
     "habits.airing": "Airing your home",
     "habits.airing.help": "How often do you open windows to air out? 10 min per day is enough without wasting too much heat.",
     "habits.airing.never": "Never or almost never",
     "habits.airing.sometimes": "Sometimes",
     "habits.airing.daily": "Every day, ~10 min",
     "habits.airing.multiple": "Several times a day or windows often open",
-
     "habits.laundry": "Laundry frequency",
     "habits.laundry.help": "How many loads per week? Each cycle costs about €0.50 in energy.",
     "habits.laundry.1_2": "1–2 loads per week",
     "habits.laundry.3_4": "3–4 loads per week",
     "habits.laundry.5_plus": "5+ loads per week",
-
     "habits.dishwasher": "Do you use a dishwasher?",
     "habits.dishwasher.help": "A modern dishwasher uses less water and energy than washing by hand.",
     "habits.yes": "Yes",
     "habits.no": "No",
-
     "habits.dryer": "Do you use a tumble dryer?",
     "habits.dryer.help": "Tumble dryers are one of the most energy-hungry appliances. One cycle costs about €0.60.",
-
     "habits.lights": "Do you often leave lights on?",
     "habits.lights.help": "In unoccupied rooms — lighting is about 10% of your electricity bill.",
-
     "habits.programmable": "Do you have a programmable thermostat?",
     "habits.programmable.help": "A programmable thermostat automatically lowers the temperature at night and when you're away.",
 
@@ -754,8 +709,6 @@ const translations: Record<Language, Record<string, string>> = {
     "results.class": "Estimated class",
     "results.consumption": "Estimated consumption",
     "results.disclaimer": "Indicative estimate. This does not replace an official DPE by a certified assessor.",
-
-    // Results — Current Performance
     "results.performance.title": "Current performance",
     "results.performance.annual_cost": "Estimated annual cost",
     "results.performance.annual_cost.note": "Based on average price of €0.21/kWh",
@@ -765,10 +718,7 @@ const translations: Record<Language, Record<string, string>> = {
     "results.performance.emissions.unit": "kg CO₂/yr",
     "results.performance.emissions.note": "Equivalent to",
     "results.performance.emissions.car_km": "km by car",
-
-    // Results — Estimated Costs
     "results.costs.title": "Your spending breakdown",
-
     "results.breakdown": "Consumption breakdown",
     "results.breakdown.heating": "Heating",
     "results.breakdown.hotwater": "Hot water",
@@ -781,17 +731,12 @@ const translations: Record<Language, Record<string, string>> = {
     "results.impact.high": "High impact",
     "results.impact.medium": "Medium impact",
     "results.impact.low": "Low impact",
-
-    // Quick Wins
     "results.quickwins.title": "Immediate savings — no renovation needed",
     "results.quickwins.subtitle": "Simple actions to cut your bill starting this month.",
     "results.quickwins.already_good": "You're already doing great! We couldn't find any additional quick wins to recommend.",
-
-    // Renovation Recommendations
     "results.reno.title": "Recommended renovations",
     "results.reno.subtitle": "Concrete actions with costs, savings, and return on investment.",
     "results.reno.empty": "Your home is already in good shape! No priority renovations identified.",
-
     "results.recommendations": "Recommended action plan",
     "results.recommendations.subtitle": "Concrete recommendations with costs, estimated savings, and aid available in Paris.",
     "results.priority.high": "High priority",
@@ -813,16 +758,12 @@ const translations: Record<Language, Record<string, string>> = {
     "results.edu.3.desc": "Lowering your thermostat by 1°C saves 7% on your bill. Over 12 months, that's real money.",
     "results.redo": "Redo the diagnostic",
     "results.export": "Download as PDF",
-
-    // Comparison
     "results.comparison.title": "Comparison with your official DPE",
     "results.comparison.assigned": "Your official DPE",
     "results.comparison.estimated": "Our estimate",
     "results.comparison.worse": "Our estimate shows higher consumption than your official DPE. This may reflect usage habits or factors our simplified questionnaire doesn't capture.",
     "results.comparison.better": "Our estimate is more favourable than your official DPE. Your energy-saving efforts are paying off!",
     "results.comparison.same": "Our estimate is consistent with your official DPE.",
-
-    // ROI
     "results.roi.title": "Return on Investment",
     "results.roi.subtitle": "How long it takes for each renovation to pay for itself through lower bills.",
     "results.roi.currentbill": "Your estimated annual bill",
@@ -834,12 +775,8 @@ const translations: Record<Language, Record<string, string>> = {
     "results.roi.payback": "Pays back in",
     "results.roi.userprovided": "your actual bill",
     "results.roi.disclaimer": "Based on average energy price of €0.21/kWh. Actual amounts depend on your contract.",
-
-    // Companies
     "results.companies": "Recommended companies",
     "results.companies.disclaimer": "Companies shown for illustration — real providers will be added soon.",
-
-    // Small wins
     "smallwins.title": "Quick savings 💡",
     "smallwins.subtitle": "Simple actions, savings starting this month",
     "smallwins.month": "month",
@@ -850,8 +787,8 @@ const translations: Record<Language, Record<string, string>> = {
     "smallwins.dryer": "Air-dry clothes when possible",
     "smallwins.lights": "Turn off lights when leaving a room",
     "smallwins.programmable": "Get a programmable thermostat (~€50)",
-
-    // Validation
+    "smallwins.heating_freq": "Heat only rooms and times you use",
+    "smallwins.airing": "Avoid long window openings in winter",
     "validation.housing_type": "Please select your housing type",
     "validation.surface": "Please indicate your home's surface area",
     "validation.arrondissement": "Please select your arrondissement",
@@ -863,8 +800,6 @@ const translations: Record<Language, Record<string, string>> = {
     "validation.ventilation": "Please select your ventilation type",
     "validation.occupants": "Please indicate the number of occupants",
     "validation.hot_water": "Please indicate your hot water usage",
-
-    // Results enhanced
     "results.summary.title": "Your diagnostic summary",
     "results.summary.class_desc.A": "Excellent! Your home is very energy-efficient.",
     "results.summary.class_desc.B": "Very good. Your home is energy-efficient.",
@@ -885,15 +820,11 @@ const translations: Record<Language, Record<string, string>> = {
     "results.next_steps.2": "2. Get a quote from a certified (RGE) contractor",
     "results.next_steps.3": "3. Check your eligible aids on france-renov.gouv.fr",
     "results.next_steps.4": "4. Get an official DPE assessment (~€150)",
-
-    // Results sidebar nav
     "results.nav.overview": "Overview",
     "results.nav.energy": "Energy contract",
     "results.nav.habits": "Habit changes",
     "results.nav.renovations": "Renovation options",
     "results.nav.nextsteps": "Next steps",
-
-    // Energy subscription section
     "results.energy_sub.title": "Optimise your energy contract",
     "results.energy_sub.subtitle": "No renovation needed — a simple contract switch can lower your bill.",
     "results.energy_sub.current": "Your estimated current spend",
@@ -904,13 +835,9 @@ const translations: Record<Language, Record<string, string>> = {
     "results.energy_sub.tip3": "Check your subscribed power isn't oversized",
     "results.energy_sub.per_year": "/yr",
     "results.energy_sub.per_month": "/mo",
-
-    // Habits section
     "results.habits.title": "Habit changes",
     "results.habits.subtitle": "Simple actions to lower your bill with zero investment.",
     "results.habits.total_saving": "Total estimated saving",
-
-    // Renovations section enhanced
     "results.reno.co2_saved": "CO₂ avoided",
     "results.reno.co2_unit": "kg/yr",
     "results.reno.roi_pct": "Return",
@@ -918,8 +845,6 @@ const translations: Record<Language, Record<string, string>> = {
     "results.reno.total_annual_saving": "Total annual saving",
     "results.reno.total_co2": "CO₂ avoided per year",
     "results.reno.global_payback": "Pays back in",
-
-    // Questionnaire energy preview
     "questionnaire.energy_preview": "Estimated energy spend",
     "questionnaire.energy_preview.year": "per year",
     "questionnaire.energy_preview.month": "per month",
