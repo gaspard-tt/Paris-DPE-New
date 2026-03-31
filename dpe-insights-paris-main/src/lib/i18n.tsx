@@ -67,7 +67,7 @@ const translations: Record<Language, Record<string, string>> = {
     "about.team.hannah": "Product Manager",
     "about.team.gaspard": "Développement frontend",
     "about.team.amelie": "Marketing",
-    "about.team.nico": "Données & backend",
+    "about.team.nicodème": "Données & backend",
 
     // 404 page
     "notfound.title": "Page introuvable",
@@ -483,7 +483,7 @@ const translations: Record<Language, Record<string, string>> = {
     "about.team.hannah": "Product Manager",
     "about.team.gaspard": "Frontend Development",
     "about.team.amelie": "Marketing",
-    "about.team.nico": "Data & Backend",
+    "about.team.nicodème": "Data & Backend",
 
     // 404 page
     "notfound.title": "Page not found",
