@@ -459,10 +459,32 @@ const Results = () => {
                         <span className={`text-4xl font-black ${DPE_TEXT_COLORS[targetClass]}`}>{targetClass}</span>
                       </div>
                     </div>
-                    <div className="p-5 text-center">
+                  <div className="p-5 text-center">
                       <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">{t("results.potential.value_gain")}</p>
                       <p className="text-3xl font-black text-foreground">+{valueGain.toLocaleString()} €</p>
                       <p className="text-xs text-muted-foreground">~+{valueGainPct}% {t("results.potential.property_value")}</p>
+                    </div>
+                  </div>
+
+                  {/* kWh savings row */}
+                  <div className="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-success/15 border-t border-success/15 bg-card">
+                    <div className="p-5 text-center">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+                        {lang === "fr" ? "kWh économisés / an" : "kWh saved / year"}
+                      </p>
+                      <p className="text-3xl font-black text-success">
+                        -{Math.round(consumption * surfaceArea * Math.min(totalSavingPct, 70) / 100).toLocaleString()}
+                        <span className="text-sm font-normal text-muted-foreground ml-1">kWh</span>
+                      </p>
+                    </div>
+                    <div className="p-5 text-center">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+                        {lang === "fr" ? "kWh économisés / mois" : "kWh saved / month"}
+                      </p>
+                      <p className="text-3xl font-black text-success">
+                        -{Math.round(consumption * surfaceArea * Math.min(totalSavingPct, 70) / 100 / 12).toLocaleString()}
+                        <span className="text-sm font-normal text-muted-foreground ml-1">kWh</span>
+                      </p>
                     </div>
                   </div>
                 </div>
